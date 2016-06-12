@@ -5,8 +5,7 @@
     "require": {
         "slim/slim": "3.*",
         "illuminate/database": "~4.2",
-        "qiniu/php-sdk": "~7.0.5",
-        "phpunit/phpunit": "~4.0"
+        "qiniu/php-sdk": "~7.0.5"
     },
     "autoload": {
         "files": [ "apps/Decorate/config.php" ],
