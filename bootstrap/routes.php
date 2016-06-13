@@ -7,7 +7,14 @@
  */
 
 // ******************************** Start Passport Api ************************
-$app->group('/decorate/v1/', function () {
-    $app->get('users/login', 'Passport\Services\UserService:login');
+$app->group('/passport/v1/', function () {
+    $this->get('user/login', 'Passport\Services\UserService:login');
 });
 // ******************************** End Passport Api **************************
+
+
+// ******************************** Start Decorate Api ************************
+$app->group('/decorate/v1/', function () {
+    $this->post('diary/add', 'Decorate\Services\DiaryService:add');
+});
+// ******************************** End Decorate Api **************************

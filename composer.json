@@ -4,8 +4,9 @@
     "type": "project",
     "require": {
         "slim/slim": "3.*",
-        "illuminate/database": "~4.2",
-        "qiniu/php-sdk": "~7.0.5"
+        "illuminate/database": "5.1.*",
+        "qiniu/php-sdk": "~7.0.5",
+        "illuminate/events": "5.1.*"
     },
     "autoload": {
         "files": [ "apps/Decorate/config.php" ],
