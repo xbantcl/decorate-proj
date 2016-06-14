@@ -6,8 +6,6 @@ abstract class BaseModel extends Model
 {
     protected $autoTime = true;
 
-    protected $connection = 'primary';
-
     public $timestamps = false;
 
     protected static function boot()

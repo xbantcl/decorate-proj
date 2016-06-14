@@ -8,7 +8,7 @@
 
 // ******************************** Start Passport Api ************************
 $app->group('/passport/v1/', function () {
-    $this->get('user/login', 'Passport\Services\UserService:login');
+    $this->post('user/login', 'Passport\Services\UserService:login');
 });
 // ******************************** End Passport Api **************************
 
@@ -16,5 +16,6 @@ $app->group('/passport/v1/', function () {
 // ******************************** Start Decorate Api ************************
 $app->group('/decorate/v1/', function () {
     $this->post('diary/add', 'Decorate\Services\DiaryService:add');
+    $this->post('diary/get', 'Decorate\Services\DiaryService:getDiaryDetailById');
 });
 // ******************************** End Decorate Api **************************

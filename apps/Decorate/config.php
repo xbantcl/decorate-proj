@@ -20,7 +20,7 @@ $dataBase = [
     'prefix'    => ''
 ];
 
-$capsule->addConnection($dataBase, 'primary');
+$capsule->addConnection($dataBase);
 
 $capsule->setEventDispatcher(new Dispatcher);
 $capsule->setAsGlobal();

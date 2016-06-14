@@ -7,7 +7,7 @@ class User extends BaseModel {
      * @var string
      */
     protected $table = 'user';
-    
+
     /**
      * The attributes excluded from the model's JSON form.
      *
