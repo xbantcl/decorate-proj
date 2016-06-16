@@ -1,8 +1,7 @@
 <?php namespace Passport\Services;
 
 use Illuminate\Support\Facades\Request;
-use Illuminate\Validation\Factory as Validator;
-use Symfony\Component\Translation\Translator;
+use Respect\Validation\Validator as v;
 
 class UserService
 {
@@ -13,24 +12,13 @@ class UserService
      */
     public function login($request, $response)
     {
-        $validator = new Validator(new Translator());
-        $validator = $validator->make($request->getParams(), [
-            'username' => 'required|string',
-            'password' => 'required|string',
-            'sys_p' => 'required|string',
-        ]);
-        
-        if ($validator->fails()) {
-            $messages = $validator->messages()->toArray();
-            foreach ($messages as $message) {
-                return Response::generate(Response::PARAM_ERROR, null, implode(',',$message));
-            }
-        }
+        //var_dump(v::alnum()->noWhitespace()->length(1, 10));exit;
+        $args = $request->getParams();
         return $response->write(json_encode(
             [
                 'status' => 200,
                 'error' => '',
-                'datas' => $request->getParsedBody()
+                'datas' => $args
             ]
         ));
     }
