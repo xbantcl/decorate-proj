@@ -1,15 +1,6 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Container\Container;
-use Illuminate\Events\Dispatcher;
-
-/**
- * Configure the database and boot Eloquent
- */
-$capsule = new Capsule;
-
-$dataBase = [
+return [
     'driver'    => 'mysql',
     'host'      => 'localhost',
     'database'  => 'decorate',
@@ -17,14 +8,10 @@ $dataBase = [
     'password'  => 'toor',
     'charset'   => 'utf8',
     'collation' => 'utf8_general_ci',
-    'prefix'    => ''
+    'prefix'    => '',
+    'redis' => [
+        'default' => [1111]
+    ]
 ];
 
-$capsule->addConnection($dataBase);
 
-$capsule->setEventDispatcher(new Dispatcher);
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
-
-// set timezone for timestamps etc
-date_default_timezone_set('UTC');

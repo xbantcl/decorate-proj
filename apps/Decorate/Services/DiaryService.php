@@ -4,8 +4,9 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Support\Facades\Request;
 use Decorate\Modules\DiaryModule;
 use Decorate\Models\Diary;
+use Respect\Validation\Validator as v;
 
-class DiaryService
+class DiaryService extends Service
 {
 
     /**
@@ -19,11 +20,17 @@ class DiaryService
     public function add($request, $response)
     {
         $args = $request->getParams();
+        $validation = $this->validation->validate($request, [
+            'password_old' => v::noWhitespace()->notEmpty(),
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
         if (isset($args['fileIdList'])) {
             $fileIdList = json_decode($args['fileIdList']);
             unset($args['fileIdList']);
         }
-
         DB::beginTransaction();
         try {
             $ret = DiaryModule::getInstance()->add($args);
