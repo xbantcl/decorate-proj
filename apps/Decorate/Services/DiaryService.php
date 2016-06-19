@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Request;
 use Decorate\Modules\DiaryModule;
 use Decorate\Models\Diary;
 use Respect\Validation\Validator as v;
+use Decorate\Redis\UserRedis;
 
 class DiaryService extends Service
 {
@@ -21,8 +22,8 @@ class DiaryService extends Service
     {
         $args = $request->getParams();
         $validation = $this->validation->validate($request, [
-            'password_old' => v::noWhitespace()->notEmpty(),
-            'password' => v::noWhitespace()->notEmpty(),
+            'content' => v::noWhitespace()->notEmpty(),
+            'decorate_progress' => v::numeric()->notEmpty(),
         ]);
         if ($validation->failed()) {
             return $validation->outputError($response);
@@ -39,9 +40,10 @@ class DiaryService extends Service
             }
         } catch (\Exception $e) {
             DB::rollback();
-            throw new \Exception($e->getMessage(), $e->code);
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
         DB::commit();
+        UserRedis::getInstance()->set('aaa', 11111);
         return $response->write(json_encode(
             [
                 'error_code' => 0,
