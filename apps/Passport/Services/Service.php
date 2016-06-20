@@ -1,4 +1,4 @@
-<?php namespace PassPort\Services;
+<?php namespace Passport\Services;
 
 use Slim\Container;
 

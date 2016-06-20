@@ -43,7 +43,6 @@ class DiaryService extends Service
             throw new \Exception($e->getMessage(), $e->getCode());
         }
         DB::commit();
-        UserRedis::getInstance()->set('aaa', 11111);
         return $response->write(json_encode(
             [
                 'error_code' => 0,

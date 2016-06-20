@@ -8,8 +8,8 @@ class UserRedis extends BaseRedis
 {
     public static function getInstance($config = 'default')
     {
-        $instance = new self();
-        $instance->setConfig($config);
-        return $instance;
+        $userRedisInstance = new self();
+        $userRedisInstance->setConfig($config);
+        return $userRedisInstance;
     }
 }

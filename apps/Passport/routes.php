@@ -10,4 +10,5 @@
 // ******************************** Start Passport Api ************************
 $app->group('/passport/v1/', function () {
     $this->post('user/login', 'Passport\Services\UserService:login');
+    $this->post('user/register', 'Passport\Services\UserService:register');
 });

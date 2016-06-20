@@ -9,20 +9,31 @@ use Slim\Container;
 
 class BaseRedis
 {
-    private static $instance = [];
-    private $container;
+    protected static $instance = [];
     protected $config = null;
+    protected $redisPath = '';
 
-    public function __construct1(Container $container, $config = 'default')
+    public function __construct($config = 'default')
     {
-        $this->container = $container;
         $this->config = $config;
+        $this->redisPath = __DIR__ . '/../config.php';
     }
 
     private function connect()
     {
-        $option = $config = $this->container->get('redis')[$this->config];
-        return new Client($option);
+        return new Client($this->getConfig());
+    }
+
+    public function getConfig()
+    {
+        $options = [];
+        if (file_exists($this->redisPath)) {
+            $configs = require __DIR__ . '/../config.php';
+            if (isset($configs[$this->config])) {
+                $options = $configs[$this->config];
+            }
+        }
+        return $options;
     }
 
     public function setConfig($config)
