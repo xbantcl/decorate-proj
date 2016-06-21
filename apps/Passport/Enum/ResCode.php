@@ -7,4 +7,5 @@ class ResCode
     const PASSWORD_ERROR = 10002;
     const ACCOUNT_EXIST = 10003;
     const INVALID_SESSION = 10004;
+    const INVALID_PLATFORM = 10005;
 }

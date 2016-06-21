@@ -45,13 +45,7 @@ class DiaryService extends Service
             throw new \Exception($e->getMessage(), $e->getCode());
         }
         DB::commit();
-        return $response->write(json_encode(
-            [
-                'error_code' => 0,
-                'message' => 'success',
-                'data' => $ret
-            ]
-        ));
+        return Help::response($response, $ret);
     }
 
     /**
@@ -65,21 +59,27 @@ class DiaryService extends Service
     public function getDiaryDetailById($request, $response)
     {
         $validation = $this->validation->validate($request, [
-            'content' => v::noWhitespace()->notEmpty(),
-            'decorate_progress' => v::numeric()->notEmpty(),
+            'diary_id' => v::numeric()->notEmpty(),
+        ]);
+
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
+        $args = Help::getParams($request);
+        $ret = DiaryModule::getInstance()->getDiaryDetailById($args['diary_id']);
+        return Help::response($response, $ret);
+    }
+
+    public function delDiaryById($request, $response)
+    {
+        $validation = $this->validation->validate($request, [
+            'diary_id' => v::numeric()->notEmpty(),
         ]);
 
         if ($validation->failed()) {
             return $validation->outputError($response);
         }
         $args = Help::getParams($request, $this->uid);
-        $ret = DiaryModule::getInstance()->getDiaryDetailById($args['diary_id']);
-        return $response->write(json_encode(
-            [
-                'error_code' => 0,
-                'message' => 'success',
-                'data' => $ret
-            ]
-        ));
+        return DiaryModule::getInstance()->delDiaryById($args['diary_id']);
     }
 }

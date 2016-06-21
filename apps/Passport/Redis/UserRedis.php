@@ -2,6 +2,7 @@
 
 use Passport\Utils\Help;
 use Respect\Validation\Rules\NullType;
+use Passport\Enum\ResCode;
 /**
  * User Redis
  */
@@ -34,11 +35,13 @@ class UserRedis extends BaseRedis
             $prefix = self::APP_SESSION_PREFIX;
             $max = self::ONLINE_COUNT;
         } else {
-            return false;
+            return Help::formatResponse(ResCode::INVALID_PLATFORM, '无效的平台');
         }
         $sessionKey = $prefix . $sessionName;
         $userSessionKey = $prefix . $sessionInfo['uid'];
+
         static::$userInstance->LPUSH($userSessionKey, $sessionName);
+
         if (static::$userInstance->LLEN($userSessionKey) > self::ONLINE_COUNT) {
             $delSessionName = static::$userInstance->RPOP($userSessionKey);
             static::$userInstance->DEL($prefix . $delSessionName);

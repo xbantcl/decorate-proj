@@ -52,13 +52,17 @@ class UserModule extends BaseModule
             DB::rollback();
             throw new \Exception($e->getMessage(), $e->getCode());
         }
-        DB::commit();
         $sessionName = UserRedis::getInstance()->saveSessionInfo(['uid' => $user->id], $args['sys_p']);
+        if(is_array($sessionName)) {
+            return $sessionName;
+        }
         if (!$sessionName) {
             return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
         }
+        DB::commit();
         return [
             'uid' => $user->id,
+            'user_type' => $user->user_type,
             'sess' => $sessionName
         ];
     }
@@ -82,7 +86,7 @@ class UserModule extends BaseModule
         } else {
             $query = User::where('account', $account);
         }
-        $user = $query->select('id', 'password', 'salt')->first();
+        $user = $query->select('id', 'password', 'salt', 'user_type')->first();
         if (!$user instanceof User) {
             return Help::formatResponse(ResCode::ACCOUNT_NOT_EXIST, '帐号不存在');
         }
@@ -96,6 +100,7 @@ class UserModule extends BaseModule
         }
         return [
             'uid' => $user->id,
+            'user_type' => $user->user_type,
             'sess' => $sessionName
         ];
     }

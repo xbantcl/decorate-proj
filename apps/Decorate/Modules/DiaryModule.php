@@ -8,6 +8,7 @@
 
 use Decorate\Models\Diary;
 use Decorate\Models\File;
+use Decorate\Models\DiaryFile;
 
 class DiaryModule extends BaseModule
 {
@@ -41,7 +42,8 @@ class DiaryModule extends BaseModule
         return false;
     }
 
-    public function getDiaryDetailById($diaryId) {
+    public function getDiaryDetailById($diaryId)
+    {
         $diarys = Diary::leftjoin('diary_file as df', 'df.diary_id', '=', 'diary.id')
             ->where('diary.id', $diaryId)
             ->select('diary.id', 'diary.title', 'diary.content', 'diary.decorate_progress', 'diary.decorate_label', 'df.file_id', 'df.file_url')
@@ -60,5 +62,10 @@ class DiaryModule extends BaseModule
         return $diaryInfo;
     }
 
+    public function delDiaryById($diaryId)
+    {
+        Diary::where('id', $diaryId)->delete();
+        DiaryFile::where('diary_id', $diaryId)->delete();
+    }
 }
  
