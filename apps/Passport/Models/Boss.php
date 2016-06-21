@@ -1,31 +1,29 @@
-<?php namespace Decorate\Models;
+<?php namespace Passport\Models;
 
-class Diary extends BaseModel
-{
+class Boss extends BaseModel {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'diary';
-
+    protected $table = 'boss';
     public $guarded = ['id'];
 
     protected $casts = [
         'id' => 'int',
         'uid' => 'int',
-        'decorate_progress' => 'int',
         'insert_time' => 'int',
-        'modify_time' => 'int'
+        'modify_time' => 'int',
+        'verify_status' => 'int',
+        'area_id' => 'int'
     ];
 
     public static $rules = [
         'uid' => 'int',
-        'title' => 'string',
-        'decorate_progress' => 'int',
-        'decorate_label' => 'string',
-        'content' => 'string',
+        'area_id' => 'int',
+        'name' => 'string',
         'insert_time' => 'int',
         'modify_time' => 'int',
+        'verify_status' => 'int',
     ];
 }

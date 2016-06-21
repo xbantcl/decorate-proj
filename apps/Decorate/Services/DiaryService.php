@@ -6,6 +6,7 @@ use Decorate\Modules\DiaryModule;
 use Decorate\Models\Diary;
 use Respect\Validation\Validator as v;
 use Decorate\Redis\UserRedis;
+use Decorate\Utils\Help;
 
 class DiaryService extends Service
 {
@@ -20,14 +21,15 @@ class DiaryService extends Service
      */
     public function add($request, $response)
     {
-        $args = $request->getParams();
         $validation = $this->validation->validate($request, [
             'content' => v::noWhitespace()->notEmpty(),
             'decorate_progress' => v::numeric()->notEmpty(),
         ]);
+
         if ($validation->failed()) {
             return $validation->outputError($response);
         }
+        $args = Help::getParams($request, $this->uid);
         if (isset($args['fileIdList'])) {
             $fileIdList = json_decode($args['fileIdList']);
             unset($args['fileIdList']);
@@ -62,7 +64,15 @@ class DiaryService extends Service
      */
     public function getDiaryDetailById($request, $response)
     {
-        $args = $request->getParams();
+        $validation = $this->validation->validate($request, [
+            'content' => v::noWhitespace()->notEmpty(),
+            'decorate_progress' => v::numeric()->notEmpty(),
+        ]);
+
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
+        $args = Help::getParams($request, $this->uid);
         $ret = DiaryModule::getInstance()->getDiaryDetailById($args['diary_id']);
         return $response->write(json_encode(
             [

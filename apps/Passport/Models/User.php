@@ -22,7 +22,7 @@ class User extends BaseModel {
         'user_type' => 'int',
         'account' => 'string',
         'nick_name' => 'string',
-        'avatar' => 'string', 
+        'avatar' => 'string',
         'password' => 'string',
         'salt' => 'string',
         'cellphone' => 'string',

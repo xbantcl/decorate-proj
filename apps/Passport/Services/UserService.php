@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Request;
 use Respect\Validation\Validator as v;
 use Passport\Enum\UserType;
-use Passport\Util\Help;
-use Passport\Models\User;
+use Passport\Utils\Help;
 use Passport\Modules\UserModule;
 
 class UserService extends Service
@@ -16,23 +15,31 @@ class UserService extends Service
      */
     public function login($request, $response)
     {
-        //var_dump(v::alnum()->noWhitespace()->length(1, 10));exit;
+        $validation = $this->validation->validate($request, [
+            'account' => v::noWhitespace()->notEmpty(),
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
         $args = $request->getParams();
-        return $response->write(json_encode(
-            [
-                'status' => 200,
-                'error' => '',
-                'datas' => $args
-            ]
-        ));
+        $data = UserModule::getInstance()->login($args['account'], $args['password'], $args['sys_p']);
+        if (isset($data['code'])) {
+            return Help::response($response, null, $data['code'], $data['message']);
+        }
+        return Help::response($response, $data);
     }
 
+    /**
+     * 用户注册.
+     * 
+     */
     public function register($request, $response)
     {
         $validation = $this->validation->validate($request, [
-//                'user_type' => v::numeric()->between(UserType::ORD_USER, UserType::WORKER),
-  //              'account' => v::noWhitespace()->notEmpty(),
-                'password' => v::noWhitespace(),
+            'user_type' => v::numeric()->between(UserType::ORD_USER, UserType::WORKER),
+            'account' => v::noWhitespace()->notEmpty(),
+            'password' => v::noWhitespace()->notEmpty(),
         ]);
         if ($validation->failed()) {
             return $validation->outputError($response);
@@ -40,7 +47,10 @@ class UserService extends Service
         $args = $request->getParams();
         $args['salt'] = Help::getSalt();
         $args['password'] = Help::encryptPassword($args['password'], $args['salt']);
-        $data = array_intersect_key($args, user::$rules);
-        UserModule::getInstance()->add($data);
+        $data = UserModule::getInstance()->add($args);
+        if (isset($data['code'])) {
+            return Help::response($response, null, $data['code'], $data['message']);
+        }
+        return Help::response($response, $data);
     }
 }

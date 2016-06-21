@@ -19,6 +19,7 @@ class DiaryModule extends BaseModule
      * @return \Illuminate\Database\Eloquent\static
      */
     public function add(array $data) {
+        $data = array_intersect_key($data, Diary::$rules);
         return Diary::create($data);
     }
 
