@@ -1,11 +1,17 @@
 <?php namespace Passport\Redis;
+/**
+ * User Redis
+ */
 
 use Passport\Utils\Help;
 use Respect\Validation\Rules\NullType;
 use Passport\Enum\ResCode;
-/**
- * User Redis
- */
+use Passport\Enum\UserType;
+use Passport\Models\OrdUser;
+use Passport\Models\Seller;
+use Passport\Models\Boss;
+use Passport\Models\Worker;
+use Passport\Models\Designer;
 
 class UserRedis extends BaseRedis
 {
@@ -13,9 +19,30 @@ class UserRedis extends BaseRedis
     const APP_SESSION_PREFIX = 'app_session#';
     const ONLINE_COUNT = 3;
     const SESSION_EXPIRE_TIME = 2592000;
+    const USER_INVITE_CODE_KEY = 'invite_code';
+    const USER_INFO_PREFIX = 'user#';
 
     private static $userInstance = NULL;
 
+    public static $userFields = [
+        'id' => 'int',
+        'avatar' => 'string',
+        'user_type' => 'int',
+        'account' => 'string',
+        'nick_name' => 'string',
+        'cellphone' => 'string',
+        'email' => 'string',
+        'invite_code' => 'string',
+        'sex' => 'int'
+    ];
+
+    /**
+     * 实例化.
+     * 
+     * @param string $config
+     * 
+     * @return UserRedis
+     */
     public static function getInstance($config = 'default')
     {
         if (NULL == static::$userInstance) {
@@ -63,5 +90,35 @@ class UserRedis extends BaseRedis
         }
         $sessionKey = $prefix . $sessionName;
         return static::$userInstance->HGET($sessionKey, 'uid');
+    }
+
+    public function getAutoIncrementNum()
+    {
+        return static::$userInstance->INCR(self::USER_INVITE_CODE_KEY);
+    }
+
+    public function getUserInfoKey($uid) {
+        return self::USER_INFO_PREFIX . $uid;
+    }
+
+    public function addUser(array $data)
+    {
+        if (empty($data['uid'])) {
+            return false;
+        }
+        if (UserType::ORD_USER == $data['user_type']) {
+            $data = array_intersect_key($data, array_merge(OrdUser::$rules, static::$userFields));
+        } elseif (UserType::SELLER == $data['user_type']) {
+            $data = array_intersect_key($args, array_merge(Seller::$rules, static::$userFields));
+        } elseif (UserType::BOSS == $data['user_type']) {
+            $data = array_intersect_key($args, array_merge(Boss::$rules, static::$userFields));
+        } elseif (UserType::WORKER == $data['user_type']) {
+            $data = array_intersect_key($args, array_merge(Worker::$rules, static::$userFields));
+        } elseif (UserType::DESIGNER == $data['user_type']) {
+            $data = array_intersect_key($args, array_merge(Designer::$rules, static::$userFields));
+        } else {
+            return false;
+        }
+        return static::$userInstance->HMSET($this->getUserInfoKey($data['uid']), $data);
     }
 }

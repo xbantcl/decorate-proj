@@ -46,6 +46,7 @@ class UserService extends Service
         }
         $args = $request->getParams();
         $args['salt'] = Help::getSalt();
+        $args['invite_code'] = Help::genInviteCode();
         $args['password'] = Help::encryptPassword($args['password'], $args['salt']);
         $data = UserModule::getInstance()->add($args);
         if (isset($data['code'])) {

@@ -16,6 +16,9 @@ use Passport\Models\Worker;
 use Passport\Utils\Help;
 use Passport\Enum\ResCode;
 use Passport\Redis\UserRedis;
+use Passport\Models\Designer;
+use Passport\Enum\DecorateType;
+use Passport\Enum\HouseType;
 
 class UserModule extends BaseModule
 {
@@ -37,16 +40,21 @@ class UserModule extends BaseModule
             $args['uid'] = $user->id;
             if (UserType::ORD_USER == $data['user_type']) {
                 $data = array_intersect_key($args, OrdUser::$rules);
-                OrdUser::create($data);
+                $userObj = OrdUser::create($data);
             } elseif (UserType::SELLER == $data['user_type']) {
                 $data = array_intersect_key($args, Seller::$rules);
-                Seller::create($data);
+                $userObj = Seller::create($data);
             } elseif (UserType::BOSS == $data['user_type']) {
                 $data = array_intersect_key($args, Boss::$rules);
-                Boss::create($data);
+                $userObj = Boss::create($data);
             } elseif (UserType::WORKER == $data['user_type']) {
                 $data = array_intersect_key($args, Worker::$rules);
-                Worker::create($data);
+                $userObj = Worker::create($data);
+            } elseif (UserType::DESIGNER == $data['user_type']) {
+                $data = array_intersect_key($args, Designer::$rules);
+                $userObj = Designer::create($data);
+            } else {
+                return Help::formatResponse(ResCode::INVALID_USER_TYPE, '无效的用户类型');
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -59,12 +67,23 @@ class UserModule extends BaseModule
         if (!$sessionName) {
             return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
         }
+        $status = UserRedis::getInstance()->addUser(array_merge($args, $userObj->toArray()));
+        if (!$status) {
+            return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
+        }
         DB::commit();
-        return [
+        $ret = [
             'uid' => $user->id,
             'user_type' => $user->user_type,
             'sess' => $sessionName
         ];
+        if (UserType::ORD_USER == $data['user_type']) {
+            $ret['dec_fund'] = Help::calcDecFund($userObj->dec_fund);
+            $ret['decorate_style'] = DecorateType::getDecorateStyleName($userObj->decorate_style);
+            $ret['decorate_type'] = HouseType::getHouseStyleName($userObj->decorate_type);
+            $ret['districts'] = $userObj->districts;
+        }
+        return $ret;
     }
 
     /**

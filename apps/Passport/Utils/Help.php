@@ -1,7 +1,10 @@
 <?php namespace Passport\Utils;
 
+use Passport\Redis\UserRedis;
 class Help
 {
+    const USER_INVITE_LENGTH = 6;
+
     /**
      * 获取密码盐值.
      * 
@@ -55,5 +58,26 @@ class Help
     public static function formatResponse($code, $message)
     {
         return ['code' => $code, 'message' => $message];
+    }
+
+    public static function genInviteCode()
+    {
+        $incrementNum = UserRedis::getInstance()->getAutoIncrementNum();
+        $inviteCode = base_convert($incrementNum, 10, 32);
+        if (strlen($inviteCode) > self::USER_INVITE_LENGTH) {
+            return false;
+        }
+        $randomStr = $this->getRandomStr(self::USER_INVITE_LENGTH - strlen($inviteCode));
+        return strtoupper($inviteCode . $randomStr);
+    }
+
+    /**
+     * 计算装修基金值.
+     * 
+     * @param integer $decFund
+     */
+    public static function calcDecFund($decFund)
+    {
+        return $decFund / 100;
     }
 }

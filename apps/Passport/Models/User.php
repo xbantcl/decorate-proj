@@ -33,6 +33,12 @@ class User extends BaseModel {
         'reg_platform' => 'int',
         'deviceId' => 'int',
         'reg_ip' => 'string',
-        'app_version' => 'string'
+        'app_version' => 'string',
+        'sys_v' => 'string',
+        'sys_m' => 'string',
+        'sys_d' => 'string',
+        'sys_p' => 'string',
+        'cli_v' => 'string',
+        'cli_p' => 'string',
     ];
 }

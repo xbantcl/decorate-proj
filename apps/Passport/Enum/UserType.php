@@ -6,4 +6,5 @@ class UserType
     const SELLER = 2;
     const BOSS = 3;
     const WORKER = 4;
+    const DESIGNER = 5;
 }
