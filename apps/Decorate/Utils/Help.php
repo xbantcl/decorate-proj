@@ -60,4 +60,17 @@ class Help
     public static function getParams($request, $uid) {
         return array_merge($request->getParams(), [$uid]);
     }
+
+    public static function config($key)
+    {
+        $configName = __DIR__ . '/../config.php';
+        if (file_exists($configName)) {
+            return false;
+        }
+        $configs = require $configName;
+        if (!isset($configs[$key])) {
+            return false;
+        }
+        return $configs[$key];
+    }
 }

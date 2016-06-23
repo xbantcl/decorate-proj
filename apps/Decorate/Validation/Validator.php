@@ -41,7 +41,7 @@ class Validator
     {
         if ($this->failed()) {
             return $response->write(json_encode([
-                'error_code' => 10001,
+                'error_code' => -1,
                 'message' => current(current($this->errors)),
             ]));
         }
