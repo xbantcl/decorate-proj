@@ -33,14 +33,27 @@ class UserModule extends BaseModule
         if ($this->checkUser($args['account'])) {
             return Help::formatResponse(ResCode::ACCOUNT_EXIST, '帐号已经存在');
         }
+        $ret = [];
         try {
             DB::beginTransaction();
+            $args['sex'] = isset($args['sex']) ? $args['sex'] : 1;
+            $args['avatar'] = UserType::$avatar[$args['sex']];
             $data = array_intersect_key($args, User::$rules);
             $user = User::create($data);
             $args['uid'] = $user->id;
             if (UserType::ORD_USER == $data['user_type']) {
+                $args['dec_fund'] = isset($args['dec_fund']) ? $args['dec_fund'] : 0; // 装修基金.
+                $args['decorate_style'] = isset($args['decorate_style']) ? $args['decorate_style'] : 0; // 装修风格.
+                $args['decorate_type'] = isset($args['decorate_type']) ? $args['decorate_type'] : 0; // 装修类型.
+                $args['decorate_area'] = isset($args['decorate_area']) ? $args['decorate_area'] : 0; // 装修面积.
+                $args['districts'] = '';
                 $data = array_intersect_key($args, OrdUser::$rules);
                 $userObj = OrdUser::create($data);
+                $ret['dec_fund'] = Help::calcDecFund($userObj->dec_fund);
+                $ret['decorate_style'] = DecorateType::getDecorateStyleName($userObj->decorate_style);
+                $ret['decorate_type'] = HouseType::getHouseStyleName($userObj->decorate_type);
+                $ret['districts'] = $userObj->districts;
+                $ret['decorate_area'] = $userObj->decorate_area;
             } elseif (UserType::SELLER == $data['user_type']) {
                 $data = array_intersect_key($args, Seller::$rules);
                 $userObj = Seller::create($data);
@@ -60,7 +73,7 @@ class UserModule extends BaseModule
             DB::rollback();
             throw new \Exception($e->getMessage(), $e->getCode());
         }
-        $sessionName = UserRedis::getInstance()->saveSessionInfo(['uid' => $user->id], $args['sys_p']);
+        $sessionName = UserRedis::getInstance()->saveSessionInfo(['uid' => $user->id], $args['cli_p']);
         if(is_array($sessionName)) {
             return $sessionName;
         }
@@ -72,18 +85,7 @@ class UserModule extends BaseModule
             return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
         }
         DB::commit();
-        $ret = [
-            'uid' => $user->id,
-            'user_type' => $user->user_type,
-            'sess' => $sessionName
-        ];
-        if (UserType::ORD_USER == $data['user_type']) {
-            $ret['dec_fund'] = Help::calcDecFund($userObj->dec_fund);
-            $ret['decorate_style'] = DecorateType::getDecorateStyleName($userObj->decorate_style);
-            $ret['decorate_type'] = HouseType::getHouseStyleName($userObj->decorate_type);
-            $ret['districts'] = $userObj->districts;
-        }
-        return $ret;
+        return array_merge($ret, ['uid' => $user->uid, 'user_type' => $user->user_type, 'avatar' => $user->avatar, 'sex' => $user->sex, 'sess' => $sessionName]);
     }
 
     /**
@@ -117,11 +119,7 @@ class UserModule extends BaseModule
         if (!$sessionName) {
             return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
         }
-        return [
-            'uid' => $user->id,
-            'user_type' => $user->user_type,
-            'sess' => $sessionName
-        ];
+        return array_merge($this->getUserInfo($user->id), ['sess' => $sessionName]);
     }
 
     /**
@@ -158,6 +156,26 @@ class UserModule extends BaseModule
             return Help::formatResponse(ResCode::INVALID_SESSION, '无效的sesion,请重新登录');
         }
         return $uid;
+    }
+
+    public function getUserInfo($uid)
+    {
+        $userInfo = UserRedis::getInstance()->getUserInfo($uid);
+        if (!$userInfo) {
+            $user = User::select('id', 'avatar', 'sex', 'nick_name', 'invite_code', 'account', 'user_type')->where('id', $uid)->first();
+            if (!$user instanceof User) {
+                return false;
+            }
+            if (UserType::ORD_USER == $user->user_type) {
+                
+            }
+        }
+        if (UserType::ORD_USER == $userInfo['user_type']) {
+            $userInfo['dec_fund'] = Help::calcDecFund($userInfo['dec_fund'] );
+            $userInfo['decorate_style'] = DecorateType::getDecorateStyleName($userInfo['decorate_style']);
+            $userInfo['decorate_type'] = HouseType::getHouseStyleName($$userInfo['decorate_type']);
+        }
+        return $userInfo;
     }
 }
  

@@ -37,9 +37,10 @@ class UserService extends Service
     public function register($request, $response)
     {
         $validation = $this->validation->validate($request, [
-            'user_type' => v::numeric()->between(UserType::ORD_USER, UserType::WORKER),
+            'user_type' => v::intVal()->between(UserType::ORD_USER, UserType::DESIGNER),
             'account' => v::noWhitespace()->notEmpty(),
             'password' => v::noWhitespace()->notEmpty(),
+            'sex' => v::optional(v::intVal()->between(1, 2)),
         ]);
         if ($validation->failed()) {
             return $validation->outputError($response);
@@ -53,5 +54,16 @@ class UserService extends Service
             return Help::response($response, null, $data['code'], $data['message']);
         }
         return Help::response($response, $data);
+    }
+
+    /**
+     * 获取用户信息.
+     * 
+     */
+    public function getUserInfo($request, $response)
+    {
+        $args = Help::getParams($request, $this->uid);
+        $userInfo = UserModule::getInstance()->getUserInfo($args['uid']);
+        return Help::response($response, $userInfo);
     }
 }

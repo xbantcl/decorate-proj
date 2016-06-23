@@ -25,7 +25,6 @@ class UserRedis extends BaseRedis
     private static $userInstance = NULL;
 
     public static $userFields = [
-        'id' => 'int',
         'avatar' => 'string',
         'user_type' => 'int',
         'account' => 'string',
@@ -109,16 +108,21 @@ class UserRedis extends BaseRedis
         if (UserType::ORD_USER == $data['user_type']) {
             $data = array_intersect_key($data, array_merge(OrdUser::$rules, static::$userFields));
         } elseif (UserType::SELLER == $data['user_type']) {
-            $data = array_intersect_key($args, array_merge(Seller::$rules, static::$userFields));
+            $data = array_intersect_key($data, array_merge(Seller::$rules, static::$userFields));
         } elseif (UserType::BOSS == $data['user_type']) {
-            $data = array_intersect_key($args, array_merge(Boss::$rules, static::$userFields));
+            $data = array_intersect_key($data, array_merge(Boss::$rules, static::$userFields));
         } elseif (UserType::WORKER == $data['user_type']) {
-            $data = array_intersect_key($args, array_merge(Worker::$rules, static::$userFields));
+            $data = array_intersect_key($data, array_merge(Worker::$rules, static::$userFields));
         } elseif (UserType::DESIGNER == $data['user_type']) {
-            $data = array_intersect_key($args, array_merge(Designer::$rules, static::$userFields));
+            $data = array_intersect_key($data, array_merge(Designer::$rules, static::$userFields));
         } else {
             return false;
         }
         return static::$userInstance->HMSET($this->getUserInfoKey($data['uid']), $data);
+    }
+
+    public function getUserInfo($uid)
+    {
+        return static::$userInstance->HGETALL($this->getUserInfoKey($uid));
     }
 }

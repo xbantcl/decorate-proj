@@ -29,6 +29,7 @@ class OrdUser extends BaseModel {
         'modify_time' => 'int',
         'decorate_progress' => 'int',
         'verify_status' => 'int',
-        'decorate_area' => 'int'
+        'decorate_area' => 'int',
+        'dec_fund' => 'int',
     ];
 }

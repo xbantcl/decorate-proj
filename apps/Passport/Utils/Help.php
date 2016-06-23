@@ -67,7 +67,7 @@ class Help
         if (strlen($inviteCode) > self::USER_INVITE_LENGTH) {
             return false;
         }
-        $randomStr = $this->getRandomStr(self::USER_INVITE_LENGTH - strlen($inviteCode));
+        $randomStr = static::getRandomStr(self::USER_INVITE_LENGTH - strlen($inviteCode));
         return strtoupper($inviteCode . $randomStr);
     }
 
@@ -79,5 +79,9 @@ class Help
     public static function calcDecFund($decFund)
     {
         return $decFund / 100;
+    }
+
+    public static function getParams($request, $uid) {
+        return array_merge($request->getParams(), [$uid]);
     }
 }

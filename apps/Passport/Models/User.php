@@ -27,6 +27,8 @@ class User extends BaseModel {
         'salt' => 'string',
         'cellphone' => 'string',
         'sex' => 'int',
+        'invite_code' => 'string',
+        'invited_code' => 'string',
         'isPush' => 'int',
         'insert_time' => 'int',
         'modify_time' => 'int',

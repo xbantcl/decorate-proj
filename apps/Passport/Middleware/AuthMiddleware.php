@@ -1,8 +1,9 @@
-<?php namespace Decorate\Middleware;
+<?php namespace Passport\Middleware;
 
-use Decorate\Auth\Auth;
+use Passport\Auth\Auth;
 use Passport\Modules\UserModule;
-use Decorate\Utils\Help;
+use Passport\Utils\Help;
+
 class AuthMiddleware extends Middleware
 {
     public function __invoke($request, $response, $next)
