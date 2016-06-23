@@ -64,7 +64,7 @@ class Help
     public static function config($key)
     {
         $configName = __DIR__ . '/../config.php';
-        if (file_exists($configName)) {
+        if (!file_exists($configName)) {
             return false;
         }
         $configs = require $configName;

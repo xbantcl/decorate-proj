@@ -25,10 +25,10 @@ class TokenService extends Service
         $configs = Help::config('qiniu');
         $bucket = strtolower($args['bucket']);
         if (!isset($configs['bucket']['pub'][$bucket])) {
-            Help::response($response, null, ResCode::BUCKET_NOT_EXIST, '上传bucket不存在');
+            return Help::response($response, null, ResCode::BUCKET_NOT_EXIST, '上传bucket不存在');
         }
         if (!isset($configs['accessKey']) || !isset($configs['secretKey'])) {
-            Help::response($response, null, ResCode::UPLOAD_KEY_NOT_EXIST, '上传密钥不存在');
+            return Help::response($response, null, ResCode::UPLOAD_KEY_NOT_EXIST, '上传密钥不存在');
         }
         $policy = ['returnBody'=>'{"key":$(key),"w":$(imageInfo.height),"h":$(imageInfo.height)}'];
         /*
@@ -43,6 +43,7 @@ class TokenService extends Service
         }
         */
         $auth = new Auth($configs['accessKey'], $configs['secretKey']);
-        return $auth->uploadToken($bucket, null, 3600, $policy);
+        $token = $auth->uploadToken($bucket, null, 3600, $policy);
+        return Help::response($response, $token);
     }
 }
