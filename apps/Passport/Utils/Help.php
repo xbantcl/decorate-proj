@@ -4,6 +4,9 @@ use Passport\Redis\UserRedis;
 class Help
 {
     const USER_INVITE_LENGTH = 6;
+    public static $castsRule = [
+            'int' => 'intval'
+    ];
 
     /**
      * 获取密码盐值.
@@ -83,5 +86,17 @@ class Help
 
     public static function getParams($request, $uid) {
         return array_merge($request->getParams(), [$uid]);
+    }
+
+    public static function casts(array $data, array $rules)
+    {
+        $checkFields = array_keys($rules);
+        foreach ($data as $field => &$value) {
+            if (in_array($field, $checkFields) && isset(static::$castsRule[$rules[$field]])) {
+                $func = static::$castsRule[$rules[$field]];
+                $value = $func($value);
+            }
+        }
+        return $data;
     }
 }

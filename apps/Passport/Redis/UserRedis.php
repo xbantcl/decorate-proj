@@ -32,7 +32,10 @@ class UserRedis extends BaseRedis
         'cellphone' => 'string',
         'email' => 'string',
         'invite_code' => 'string',
-        'sex' => 'int'
+        'sex' => 'int',
+        'uid' => 'int',
+        'modify_time' => 'int',
+        'insert_time' => 'int'
     ];
 
     /**
@@ -123,6 +126,7 @@ class UserRedis extends BaseRedis
 
     public function getUserInfo($uid)
     {
-        return static::$userInstance->HGETALL($this->getUserInfoKey($uid));
+        $userInfo = static::$userInstance->HGETALL($this->getUserInfoKey($uid));
+        return Help::casts($userInfo, static::$userFields);
     }
 }

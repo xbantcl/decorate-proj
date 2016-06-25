@@ -30,9 +30,10 @@ class UserModule extends BaseModule
      * @return \Illuminate\Database\Eloquent\static
      */
     public function add(array $args) {
-        if ($this->checkUser($args['account'])) {
+        if (true === ($ret = $this->checkUser($args['account']))) {
             return Help::formatResponse(ResCode::ACCOUNT_EXIST, '帐号已经存在');
         }
+        $args = array_merge($args, $ret);
         $ret = [];
         try {
             DB::beginTransaction();
@@ -85,7 +86,7 @@ class UserModule extends BaseModule
             return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
         }
         DB::commit();
-        return array_merge($ret, ['uid' => $user->uid, 'user_type' => $user->user_type, 'avatar' => $user->avatar, 'sex' => $user->sex, 'sess' => $sessionName]);
+        return array_merge($ret, ['uid' => $user->id, 'user_type' => $user->user_type, 'avatar' => $user->avatar, 'sex' => $user->sex, 'sess' => $sessionName]);
     }
 
     /**
@@ -131,16 +132,20 @@ class UserModule extends BaseModule
      */
     public function checkUser($account)
     {
+        $param['account'] = '';
         if (Help::isPhone($account)) {
             $query = User::where('cellphone', $account);
+            $param['cellphone'] = $account;
         } elseif (Help::isEmail($account)) {
             $query = User::where('email', $email);
+            $param['email'] = $account;
         } else {
             $query = User::where('account', $account);
+            $param['account'] = $account;
         }
         $user = $query->select('id')->first();
         if (!$user instanceof User) {
-            return false;
+            return $param;
         }
         return true;
     }

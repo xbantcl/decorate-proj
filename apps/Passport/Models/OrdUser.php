@@ -31,5 +31,6 @@ class OrdUser extends BaseModel {
         'verify_status' => 'int',
         'decorate_area' => 'int',
         'dec_fund' => 'int',
+        'districts' => 'string',
     ];
 }
