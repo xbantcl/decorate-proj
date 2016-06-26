@@ -76,6 +76,12 @@ class UserService extends Service
 
     public function updatePassword($request, $response)
     {
+        $validation = $this->validation->validate($request, [
+            'password' => v::noWhitespace()->notEmpty(),
+        ]);
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
         $args = Help::getParams($request, $this->uid);
         $ret = UserModule::getInstance()->updatePassword($args);
         return Help::response($response, $ret);
