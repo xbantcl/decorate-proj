@@ -16,4 +16,5 @@ $app->group('/passport/v1/', function () {
 
 $app->group('/passport/v1/', function () {
     $this->post('user/get', 'Passport\Services\UserService:getUserInfo');
+    $this->post('user/update', 'Passport\Services\UserService:updateUserInfo');
 })->add(new AuthMiddleware($container));

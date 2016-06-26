@@ -131,4 +131,9 @@ class UserRedis extends BaseRedis
         $userInfo = static::$userInstance->HGETALL($this->getUserInfoKey($uid));
         return Help::casts($userInfo, static::$userFields);
     }
+
+    public function updateUserInfo(array $data)
+    {
+        return $this->addUser($data);
+    }
 }

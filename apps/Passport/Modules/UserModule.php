@@ -31,7 +31,7 @@ class UserModule extends BaseModule
      */
     public function add(array $args) {
         if (true === ($ret = $this->checkUser($args['account']))) {
-            return Help::formatResponse(ResCode::ACCOUNT_EXIST, '帐号已经存在');
+            return ResCode::formatError(ResCode::ACCOUNT_EXIST);
         }
         $args = array_merge($args, $ret);
         $ret = [];
@@ -70,7 +70,7 @@ class UserModule extends BaseModule
                 $data = array_intersect_key($args, Designer::$rules);
                 $userObj = Designer::create($data);
             } else {
-                return Help::formatResponse(ResCode::INVALID_USER_TYPE, '无效的用户类型');
+                return ResCode::formatError(ResCode::INVALID_USER_TYPE);
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -81,11 +81,11 @@ class UserModule extends BaseModule
             return $sessionName;
         }
         if (!$sessionName) {
-            return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
+            return ResCode::formatError(ResCode::SYSTEM_ERROR);
         }
         $status = UserRedis::getInstance()->addUser(array_merge($args, $userObj->toArray()));
         if (!$status) {
-            return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
+            return ResCode::formatError(ResCode::SYSTEM_ERROR);
         }
         DB::commit();
         return array_merge($ret, ['uid' => $user->id, 'user_type' => $user->user_type, 'avatar' => $user->avatar, 'sex' => $user->sex, 'sess' => $sessionName]);
@@ -112,15 +112,15 @@ class UserModule extends BaseModule
         }
         $user = $query->select('id', 'password', 'salt', 'user_type')->first();
         if (!$user instanceof User) {
-            return Help::formatResponse(ResCode::ACCOUNT_NOT_EXIST, '帐号不存在');
+            return ResCode::formatError(ResCode::ACCOUNT_NOT_EXIST);
         }
 
         if (Help::encryptPassword($password, $user->salt) != $user->password) {
-            return Help::formatResponse(ResCode::PASSWORD_ERROR, '密码错误');
+            return ResCode::formatError(ResCode::PASSWORD_ERROR);
         }
         $sessionName = UserRedis::getInstance()->saveSessionInfo(['uid' => $user->id], $platform);
         if (!$sessionName) {
-            return Help::formatResponse(ResCode::SYSTEM_ERROR, '系统错误');
+            return ResCode::formatError(ResCode::SYSTEM_ERROR);
         }
         return array_merge($this->getUserInfo($user->id), ['sess' => $sessionName]);
     }
@@ -160,7 +160,7 @@ class UserModule extends BaseModule
     public function checkLogin($sessionName, $platform = 'app') {
         $uid = UserRedis::getInstance()->getSessionInfo($sessionName, $platform);
         if (!$uid) {
-            return Help::formatResponse(ResCode::INVALID_SESSION, '无效的sesion,请重新登录');
+            return ResCode::formatError(ResCode::INVALID_SESSION);
         }
         return $uid;
     }
@@ -184,6 +184,50 @@ class UserModule extends BaseModule
             $userInfo['decorate_progress'] = DecorateType::getDecorateStatus($userInfo['decorate_progress']);
         }
         return $userInfo;
+    }
+
+    /**
+     * 更新用户信息.
+     * 
+     * @param array $data
+     * 
+     * @return boolean
+     */
+    public function updateUserInfo(array $data)
+    {
+        if (empty($data['uid'])) {
+            return false;
+        }
+
+        $user = User::select('id', 'user_type')->find($data['uid']);
+        if (! $user instanceof User) {
+            return ResCode::formatError(ResCode::ACCOUNT_NOT_EXIST);
+        }
+        DB::beginTransaction();
+        try {
+            User::where('id', $data['uid'])->update(array_intersect_key($data, User::$rules));
+            if (UserType::ORD_USER == $user->user_type) {
+                OrdUser::where('uid', $data['uid'])->update(array_intersect_key($data, OrdUser::$rules));
+            } elseif (UserType::BOSS == $user->user_type) {
+                Boss::where('uid', $data['uid'])->update(array_intersect_key($data, Boss::$rules));
+            } elseif (UserType::SELLER == $user->user_type) {
+                Seller::where('uid', $data['uid'])->update(array_intersect_key($data, Seller::$rules));
+            } elseif (UserType::WORKER == $user->user_type) {
+                Worker::where('uid', $data['uid'])->update(array_intersect_key($data, Worker::$rules));
+            } elseif (UserType::DESIGNER == $user->user_type) {
+                Designer::where('uid', $data['uid'])->update(array_intersect_key($data, Designer::$rules));
+            } else {
+                throw new \Exception(null, ResCode::INVALID_USER_TYPE);
+            }
+        } catch (\Exception $e) {
+            return ResCode::formatError($e->getCode());
+        }
+        $ret = UserRedis::getInstance()->updateUserInfo($data);
+        if (!$ret) {
+            return ResCode::formatError(ResCode::UPDATE_USER_INFO_FAILED);
+        }
+        DB::commit();
+        return true;
     }
 }
  
