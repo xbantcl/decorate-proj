@@ -47,6 +47,7 @@ class UserModule extends BaseModule
                 $args['decorate_style'] = isset($args['decorate_style']) ? $args['decorate_style'] : 0; // 装修风格.
                 $args['decorate_type'] = isset($args['decorate_type']) ? $args['decorate_type'] : 0; // 装修类型.
                 $args['decorate_area'] = isset($args['decorate_area']) ? $args['decorate_area'] : 0; // 装修面积.
+                $args['decorate_progress'] = isset($args['decorate_progress']) ? $args['decorate_progress'] : 1; // 装修面积.
                 $args['districts'] = '';
                 $data = array_intersect_key($args, OrdUser::$rules);
                 $userObj = OrdUser::create($data);
@@ -55,6 +56,7 @@ class UserModule extends BaseModule
                 $ret['decorate_type'] = HouseType::getHouseStyleName($userObj->decorate_type);
                 $ret['districts'] = $userObj->districts;
                 $ret['decorate_area'] = $userObj->decorate_area;
+                $ret['decorate_progress'] = DecorateType::getDecorateStatus($userObj->decorate_progress);
             } elseif (UserType::SELLER == $data['user_type']) {
                 $data = array_intersect_key($args, Seller::$rules);
                 $userObj = Seller::create($data);
@@ -179,6 +181,7 @@ class UserModule extends BaseModule
             $userInfo['dec_fund'] = Help::calcDecFund($userInfo['dec_fund'] );
             $userInfo['decorate_style'] = DecorateType::getDecorateStyleName($userInfo['decorate_style']);
             $userInfo['decorate_type'] = HouseType::getHouseStyleName($$userInfo['decorate_type']);
+            $userInfo['decorate_progress'] = DecorateType::getDecorateStatus($userInfo['decorate_progress']);
         }
         return $userInfo;
     }

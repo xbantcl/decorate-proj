@@ -35,7 +35,9 @@ class UserRedis extends BaseRedis
         'sex' => 'int',
         'uid' => 'int',
         'modify_time' => 'int',
-        'insert_time' => 'int'
+        'insert_time' => 'int',
+        'decorate_progress' => 'int',
+        'decorate_area' => 'int'
     ];
 
     /**
