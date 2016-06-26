@@ -10,6 +10,7 @@ class ResCode
     const INVALID_PLATFORM = 10005;
     const INVALID_USER_TYPE = 10006;
     const UPDATE_USER_INFO_FAILED = 10007;
+    const CHANGE_PASSWORD_FAILED = 10008;
 
     public static $errorMessage = [
             self::SYSTEM_ERROR => '系统错误',
@@ -20,6 +21,7 @@ class ResCode
             self::INVALID_PLATFORM => '无效的平台',
             self::INVALID_USER_TYPE => '无效的用户类型',
             self::UPDATE_USER_INFO_FAILED => '更新用户失败',
+            self::CHANGE_PASSWORD_FAILED => '修改密码失败',
     ];
 
     public static function formatError($code)

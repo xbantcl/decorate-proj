@@ -73,4 +73,11 @@ class UserService extends Service
         $ret = UserModule::getInstance()->updateUserInfo($args);
         return Help::response($response, $ret);
     }
+
+    public function updatePassword($request, $response)
+    {
+        $args = Help::getParams($request, $this->uid);
+        $ret = UserModule::getInstance()->updatePassword($args);
+        return Help::response($response, $ret);
+    }
 }

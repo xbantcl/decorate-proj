@@ -229,5 +229,25 @@ class UserModule extends BaseModule
         DB::commit();
         return true;
     }
+
+    public function updatePassword(array $data)
+    {
+        if (empty($data['uid'])) {
+            return false;
+        }
+        $user = User::select('id', 'user_type')->find($data['uid']);
+        if (! $user instanceof User) {
+            return ResCode::formatError(ResCode::ACCOUNT_NOT_EXIST);
+        }
+        $salt = Help::getSalt();
+        $password = Help::encryptPassword($data['password'], $salt);
+        try {
+            User::where('id', $data['uid'])->update(['password' => $password, 'salt' => $salt]);
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            return ResCode::formatError(ResCode::CHANGE_PASSWORD_FAILED);
+        }
+        return true;
+    }
 }
  

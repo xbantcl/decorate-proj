@@ -99,4 +99,9 @@ class Help
         }
         return $data;
     }
+
+    public static function genPassword($password)
+    {
+        
+    }
 }
