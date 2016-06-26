@@ -58,7 +58,7 @@ class Help
     }
 
     public static function getParams($request, $uid) {
-        return array_merge($request->getParams(), [$uid]);
+        return array_merge($request->getParams(), ['uid' => $uid]);
     }
 
     public static function config($key)
