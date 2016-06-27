@@ -136,4 +136,35 @@ class UserRedis extends BaseRedis
     {
         return $this->addUser($data);
     }
+
+    public function getUserInfoByBatch(array $uids, array $fields = [])
+    {
+        $uids = [1,2];
+        if (empty($uids)) {
+            return [];
+        }
+        $usersInfo = [];
+        $ret = static::$userInstance->pipeline(function ($pipe) use ($uids, $fields) {
+            foreach ($uids as $uid) {
+                if ($fields) {
+                    $pipe->HMGET($this->getUserInfoKey($uid), $fields);
+                } else {
+                    $pipe->HGETALL($this->getUserInfoKey($uid));
+                }
+            }
+        });
+
+        foreach ($ret as $index => $item) {
+            $temp = $item;
+            if ($fields) {
+                $item = [];
+                foreach ($fields as $key => $field) {
+                    $item[$field] = $temp[$key];
+                }
+            }
+            $item = Help::casts($item, static::$userFields);
+            $usersInfo[$uids[$index]] = $item;
+        }
+        return $usersInfo;
+    }
 }

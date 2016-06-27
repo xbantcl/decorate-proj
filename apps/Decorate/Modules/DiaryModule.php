@@ -9,6 +9,7 @@
 use Decorate\Models\Diary;
 use Decorate\Models\File;
 use Decorate\Models\DiaryFile;
+use Passport\Modules\UserModule;
 
 class DiaryModule extends BaseModule
 {
@@ -62,10 +63,57 @@ class DiaryModule extends BaseModule
         return $diaryInfo;
     }
 
-    public function delDiaryById($diaryId)
+    public function delDiaryById($diaryId, $uid)
     {
-        Diary::where('id', $diaryId)->delete();
-        DiaryFile::where('diary_id', $diaryId)->delete();
+        $ret = Diary::where('id', $diaryId)->where('uid', $uid)->delete();
+        if ($ret) {
+            DiaryFile::where('diary_id', $diaryId)->delete();
+        }
+    }
+
+    public function getDiaryList($start = 0, $limit = 15)
+    {
+        $query = Diary::leftjoin('diary_file as df', 'df.diary_id', '=', 'diary.id')
+            ->select('diary.title', 'diary.decorate_progress', 'diary.label_id', 'diary.content', 'diary.insert_time', 'df.file_id', 'df.file_url')
+            ->orderBy('diary.id', 'desc')
+            ->groupBy('uid');
+        if ($start > 0) {
+            $query = $query->where('diary.id', '<', $start);
+        }
+        $diaries = $query->take($limit + 1)->get()->toArray();
+        if (empty($diaries)) {
+            return ['start' => 0, 'more' => 0, 'data' => []];
+        }
+        $uids = [];
+        $diaryList = [];
+        $count = 0;
+        $more = 0;
+        foreach ($diaries as $diary) {
+            if (!in_array($diary['uid'], $uids)) {
+                $uids[] = $diary['uid'];
+            }
+            if (!isset($diaryList[$diary['id']])) {
+                $temp = $diary;
+                unset($temp['file_id']);
+                unset($temp['file_url']);
+                $diaryList[$diary['id']] = $temp;
+                $count ++;
+            }
+            if (!empty($diary['file_id']) && !empty($diary['file_url'])) {
+                $diaryList[$diary['id']]['fileList'] = ['id' => $diary['file_id'], 'file_url' => $diary['file_url']];
+            }
+        }
+        $usersInfo = UserModule::getInstance()->getUserInfoByBatch($uids, ['uid', 'avatar', 'nick_name']);
+        foreach ($diaryList as &$diary) {
+            if (isset($usersInfo[$diary['uid']])) {
+                $diary['user'] = $usersInfo[$diary['uid']];
+            }
+        }
+        if ($count > $limit) {
+            $more = 1;
+            array_pop($diaryList);
+        }
+        $start = end($diaryList)['id'];
+        return ['start' => $start, 'more' => $more, 'data' => $diaryList];
     }
 }
- 

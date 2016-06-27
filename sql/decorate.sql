@@ -145,7 +145,7 @@ CREATE TABLE `diary` (
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
     `title` varchar(2048) NOT NULL COMMENT '日志标题',
     `decorate_progress` tinyint(4) DEFAULT 1 COMMENT '装修进度, 1-装修准备中, 2-装修进场, 3-装修完成',
-    `decorate_label` varchar(32) DEFAULT '' COMMENT '装修标签',
+    `label_id` int NOT NULL COMMENT '装修标签',
     `content` varchar(2048) NOT NULL COMMENT '日志内容',
     `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',

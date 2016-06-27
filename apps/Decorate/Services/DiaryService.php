@@ -30,6 +30,7 @@ class DiaryService extends Service
             return $validation->outputError($response);
         }
         $args = Help::getParams($request, $this->uid);
+        exit;
         if (isset($args['fileIdList'])) {
             $fileIdList = json_decode($args['fileIdList']);
             unset($args['fileIdList']);
@@ -81,5 +82,20 @@ class DiaryService extends Service
         }
         $args = Help::getParams($request, $this->uid);
         return DiaryModule::getInstance()->delDiaryById($args['diary_id']);
+    }
+
+    public function getDiaryList($request, $response)
+    {
+        $validation = $this->validation->validate($request, [
+            'start' => v::notEmpty()->numeric(),
+            'limit' => v::optional(v::numeric())
+        ]);
+
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
+        $args = Help::getParams($request, $this->uid);
+        $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
+        return DiaryModule::getInstance()->getDiaryList(intval($args['start']), $args['limit']);
     }
 }

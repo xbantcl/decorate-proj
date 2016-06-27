@@ -249,5 +249,10 @@ class UserModule extends BaseModule
         }
         return true;
     }
+
+    public function getUserInfoByBatch(array $uids, array $fields = [])
+    {
+        return UserRedis::getInstance()->getUserInfoByBatch($uids, $fields);
+    }
 }
  
