@@ -49,13 +49,7 @@ class Help
     }
 
     public static function response($response, $data = null, $code = 0, $message = 'success') {
-        return $response->write(json_encode(
-            [
-                'error_code' => $code,
-                'message' => $message,
-                'data' => $data
-            ]
-        ));
+        return $response->withJson(['error_code' => $code, 'message' => $message, 'data'=> $data]);
     }
 
     public static function formatResponse($code, $message)
@@ -100,8 +94,4 @@ class Help
         return $data;
     }
 
-    public static function genPassword($password)
-    {
-        
-    }
 }

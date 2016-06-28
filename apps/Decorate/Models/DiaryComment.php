@@ -1,30 +1,31 @@
 <?php namespace Decorate\Models;
 
-class Diary extends BaseModel
+class DiaryComment extends BaseModel
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'diary';
+    protected $table = 'diary_comment';
 
     public $guarded = ['id'];
 
     protected $casts = [
         'id' => 'int',
         'uid' => 'int',
-        'decorate_progress' => 'int',
-        'label_id' => 'int',
+        'diary_id' => 'int',
+        'parent_id' => 'int',
+        'target_uid' => 'int',
         'insert_time' => 'int',
         'modify_time' => 'int'
     ];
 
     public static $rules = [
         'uid' => 'int',
-        'title' => 'string',
-        'decorate_progress' => 'int',
-        'label_id' => 'int',
+        'diary_id' => 'int',
+        'parent_id' => 'int',
+        'target_uid' => 'int',
         'content' => 'string',
         'insert_time' => 'int',
         'modify_time' => 'int',

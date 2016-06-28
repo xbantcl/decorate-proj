@@ -232,3 +232,13 @@ CREATE TABLE `discuss_comment_file` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='讨论评论图片数据表';
+
+DROP TABLE IF EXISTS `decorate_label`;
+CREATE TABLE `decorate_label` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL COMMENT '标签名称',
+    `parentId` int(11) unsigned NOT NULL COMMENT '讨论评论图片id',
+    `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='装修标签';

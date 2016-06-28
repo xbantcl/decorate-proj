@@ -14,4 +14,5 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('diary/get', 'Decorate\Services\DiaryService:getDiaryDetailById');
     $this->post('diary/list', 'Decorate\Services\DiaryService:getDiaryList');
     $this->post('token/get', 'Decorate\Services\TokenService:getUploadFileToken');
+    $this->post('label/tree', 'Decorate\Services\DiaryService:getLabelTree');
 })->add(new AuthMiddleware($container));

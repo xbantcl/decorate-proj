@@ -23,34 +23,28 @@ class DiaryService extends Service
     {
         $validation = $this->validation->validate($request, [
             'content' => v::noWhitespace()->notEmpty(),
-            'decorate_progress' => v::numeric()->notEmpty(),
+            'title' => v::noWhitespace()->notEmpty(),
+            'decorate_progress' => v::notEmpty()->numeric(),
+            'label_id' => v::numeric()
         ]);
 
         if ($validation->failed()) {
             return $validation->outputError($response);
         }
         $args = Help::getParams($request, $this->uid);
-        exit;
-        if (isset($args['fileIdList'])) {
-            $fileIdList = json_decode($args['fileIdList']);
-            unset($args['fileIdList']);
+        if (isset($args['fileList'])) {
+            $args['fileList'] = json_decode($args['fileList'], true);
         }
-        DB::beginTransaction();
-        try {
-            $ret = DiaryModule::getInstance()->add($args);
-            if (!empty($fileIdList)) {
-                DiaryModule::getInstance()->addFile($ret->id, $fileIdList);
-            }
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new \Exception($e->getMessage(), $e->getCode());
+
+        $ret = DiaryModule::getInstance()->add($args);
+        if (isset($ret['code'])) {
+            return Help::response($response, $ret['code'], $ret['message']);
         }
-        DB::commit();
         return Help::response($response, $ret);
     }
 
     /**
-     * 添加装修日志.
+     * 获取装修日志详情.
      *
      * @param object $request
      * @param object $response
@@ -81,13 +75,13 @@ class DiaryService extends Service
             return $validation->outputError($response);
         }
         $args = Help::getParams($request, $this->uid);
-        return DiaryModule::getInstance()->delDiaryById($args['diary_id']);
+        return Help::response($response, DiaryModule::getInstance()->delDiaryById($args['diary_id']));
     }
 
     public function getDiaryList($request, $response)
     {
         $validation = $this->validation->validate($request, [
-            'start' => v::notEmpty()->numeric(),
+            'start' => v::numeric(),
             'limit' => v::optional(v::numeric())
         ]);
 
@@ -96,6 +90,33 @@ class DiaryService extends Service
         }
         $args = Help::getParams($request, $this->uid);
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
-        return DiaryModule::getInstance()->getDiaryList(intval($args['start']), $args['limit']);
+        return Help::response($response, DiaryModule::getInstance()->getDiaryList(intval($args['start']), $args['limit']));
+    }
+
+    public function getLabelTree($request, $response)
+    {
+        return Help::response($response, DiaryModule::getInstance()->getLabelTree());
+    }
+
+    public function commentDiary($request, $response)
+    {
+        $validation = $this->validation->validate($request, [
+            'diary_id' => v::numeric(),
+            'content' => noWhitespace()->notEmpty(),
+            'parent_id' => v::optional(v::numeric()),
+            'target_uid' => v::optional(v::numeric()),
+        ]);
+
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
+
+        $args = Help::getParams($request, $this->uid);
+        if (isset($args['fileList'])) {
+            $args['fileList'] = json_decode($args['fileList'], true);
+        }
+        $args['parent_id'] = isset($args['parent_id']) ? $args['parent_id'] : 0;
+        $args['target_uid'] = isset($args['target_uid']) ? $args['target_uid'] : 0;
+        $ret = DiaryModule::getInstance()->commentDiary($args);
     }
 }

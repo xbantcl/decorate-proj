@@ -139,7 +139,6 @@ class UserRedis extends BaseRedis
 
     public function getUserInfoByBatch(array $uids, array $fields = [])
     {
-        $uids = [1,2];
         if (empty($uids)) {
             return [];
         }
@@ -161,6 +160,10 @@ class UserRedis extends BaseRedis
                 foreach ($fields as $key => $field) {
                     $item[$field] = $temp[$key];
                 }
+            }
+            if (0 == $item['uid']) {
+                $item['avatar'] = '';
+                $item['nick_name'] = '未知用户';
             }
             $item = Help::casts($item, static::$userFields);
             $usersInfo[$uids[$index]] = $item;

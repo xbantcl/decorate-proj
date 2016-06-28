@@ -43,13 +43,7 @@ class Help
     }
 
     public static function response($response, $data = null, $code = 0, $message = 'success') {
-        return $response->write(json_encode(
-            [
-                'error_code' => $code,
-                'message' => $message,
-                'data' => $data
-            ]
-        ));
+        return $response->withJson(['error_code' => $code, 'message' => $message, 'data'=> $data]);
     }
 
     public static function formatResponse($code, $message)
@@ -57,7 +51,7 @@ class Help
         return ['code' => $code, 'message' => $message];
     }
 
-    public static function getParams($request, $uid) {
+    public static function getParams($request, $uid = 0) {
         return array_merge($request->getParams(), ['uid' => $uid]);
     }
 
@@ -72,5 +66,22 @@ class Help
             return false;
         }
         return $configs[$key];
+    }
+
+    /**
+     * 获取uuid.
+     */
+    public static function getUuid()
+    {
+        mt_srand((double)microtime() * 10000);
+        $charid = strtoupper(md5(uniqid(rand(), true)));
+        $hyphen = chr(45);
+        $uuid = chr(123) . substr($charid, 0, 8) . $hyphen
+            . substr($charid, 8, 4) . $hyphen
+            . substr($charid, 12, 4) . $hyphen
+            . substr($charid, 16, 4) . $hyphen
+            . substr($charid, 20, 12)
+            . chr(125);
+        return $uuid;
     }
 }
