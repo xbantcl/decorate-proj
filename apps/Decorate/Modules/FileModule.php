@@ -24,7 +24,16 @@ class FileModule extends BaseModule
      * 
      * @return \Illuminate\Database\Eloquent\static
      */
-    public function add($resId, array $fileList, $type) {
+    public function add($resId, array $fileList, $type, $bucket = '') {
+        if (!$bucket) {
+            return ResCode::formatError(ResCode::FILE_BUCKET_NOT_EXIST);
+        } else {
+            $configs = Help::config('qiniu')['bucket']['pub'];
+            $resDomin = isset($configs[$bucket]) ? $configs[$bucket] : '';
+            if (!$resDomin) {
+                return ResCode::formatError(ResCode::FILE_BUCKET_NOT_EXIST);
+            }
+        }
         $uuid = Help::getUuid();
         $nowTime = time();
         try {
@@ -32,8 +41,8 @@ class FileModule extends BaseModule
             foreach ($fileList as $file) {
                 $insertData[] = [
                     'intr' => '',
-                    'url' => $file['url'],
-                    'mark_url' => $file['url'],
+                    'url' => $resDomin . $file['url'],
+                    'mark_url' => $resDomin . $file['url'],
                     'size' => isset($file['size']) ? $file['size'] : 0,
                     'width' => isset($file['width']) ? $file['width'] : 0,
                     'height' => isset($file['height']) ? $file['height'] : 0,

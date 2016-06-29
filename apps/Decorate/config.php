@@ -25,9 +25,9 @@ return [
                 
             ],
             'pub' => [
-                'avatar' => 'http://o97tnvdt9.bkt.clouddn.com',
-                'decorate-pic' => 'http://o97u6hyxb.bkt.clouddn.com',
-                'decorate-style' => 'http://o97uykzik.bkt.clouddn.com',
+                'avatar' => 'http://o97tnvdt9.bkt.clouddn.com/',
+                'decorate-pic' => 'http://o97u6hyxb.bkt.clouddn.com/',
+                'decorate-style' => 'http://o97uykzik.bkt.clouddn.com/',
             ]
         ]
     ],

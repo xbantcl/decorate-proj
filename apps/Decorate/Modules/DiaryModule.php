@@ -32,7 +32,7 @@ class DiaryModule extends BaseModule
             $diaryData = array_intersect_key($data, Diary::$rules);
             $diary = Diary::create($diaryData);
             if (!empty($data['fileList'])) {
-                $fileList = FileModule::getInstance()->add($diary->id, $data['fileList'], FileType::DIARY_FILE);
+                $fileList = FileModule::getInstance()->add($diary->id, $data['fileList'], FileType::DIARY_FILE, 'decorate-pic');
                 if (isset($fileList['code'])) {
                     DB::rollback();
                     return $fileList;
@@ -194,7 +194,7 @@ class DiaryModule extends BaseModule
             $diaryCommentData = array_intersect_key($data, DiaryComment::$rules);
             $diaryComment = DiaryComment::create($diaryCommentData);
             if (!empty($data['fileList'])) {
-                $fileList = FileModule::getInstance()->add($diaryComment->id, $data['fileList'], FileType::DIARY_COMMENT_FILE);
+                $fileList = FileModule::getInstance()->add($diaryComment->id, $data['fileList'], FileType::DIARY_COMMENT_FILE, 'decorate-pic');
                 if (isset($fileList['code'])) {
                     DB::rollback();
                     return $fileList;
