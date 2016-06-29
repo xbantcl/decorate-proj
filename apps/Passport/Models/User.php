@@ -16,6 +16,7 @@ class User extends BaseModel {
         'insert_time' => 'int',
         'modify_time' => 'int',
         'cellphone' => 'int',
+        'sex' => 'int',
     ];
 
     public static $rules = [

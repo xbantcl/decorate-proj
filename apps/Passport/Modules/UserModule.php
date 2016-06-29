@@ -38,7 +38,7 @@ class UserModule extends BaseModule
         try {
             DB::beginTransaction();
             $args['sex'] = isset($args['sex']) ? $args['sex'] : 1;
-            $args['avatar'] = UserType::$avatar[$args['sex']];
+            $this->translateAvatar($args);
             $data = array_intersect_key($args, User::$rules);
             $user = User::create($data);
             $args['uid'] = $user->id;
@@ -134,7 +134,7 @@ class UserModule extends BaseModule
      */
     public function checkUser($account)
     {
-        $param['account'] = '';
+        $param = ['account' => '', 'cellphone' => '', 'email' => ''];
         if (Help::isPhone($account)) {
             $query = User::where('cellphone', $account);
             $param['cellphone'] = $account;
@@ -169,13 +169,14 @@ class UserModule extends BaseModule
     {
         $userInfo = UserRedis::getInstance()->getUserInfo($uid);
         if (!$userInfo) {
-            $user = User::select('id', 'avatar', 'sex', 'nick_name', 'invite_code', 'account', 'user_type')->where('id', $uid)->first();
+            $user = User::select('id', 'avatar', 'sex', 'email', 'nick_name', 'invite_code', 'account', 'user_type')->where('id', $uid)->first();
             if (!$user instanceof User) {
                 return false;
             }
             if (UserType::ORD_USER == $user->user_type) {
-                
+                $userObj = OrdUser::select('dec_fund', 'decorate_style', 'decorate_type', 'decorate_progress')->where('uid', $uid)->first();
             }
+            $userInfo = array_merge($user->toArray(), $userObj->toArray());
         }
         if (UserType::ORD_USER == $userInfo['user_type']) {
             $userInfo['dec_fund'] = Help::calcDecFund($userInfo['dec_fund'] );
@@ -184,6 +185,16 @@ class UserModule extends BaseModule
             $userInfo['decorate_progress'] = DecorateType::getDecorateStatus($userInfo['decorate_progress']);
         }
         return $userInfo;
+    }
+
+    public function translateAvatar(array &$data)
+    {
+        if (!empty($data['avatar'])) {
+            $avatarDomin = Help::config('bucket')['avatar'];
+            $data['avatar'] = $avatarDomin . $data['avatar'];
+        } else {
+            $data['avatar'] = UserType::$avatar[$data['sex']];
+        }
     }
 
     /**
@@ -202,6 +213,9 @@ class UserModule extends BaseModule
         $user = User::select('id', 'user_type')->find($data['uid']);
         if (! $user instanceof User) {
             return ResCode::formatError(ResCode::ACCOUNT_NOT_EXIST);
+        }
+        if (!empty($data['avatar'])) {
+            $this->translateAvatar($data);
         }
         DB::beginTransaction();
         try {

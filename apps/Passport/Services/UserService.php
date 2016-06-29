@@ -40,6 +40,7 @@ class UserService extends Service
             'user_type' => v::intVal()->between(UserType::ORD_USER, UserType::DESIGNER),
             'account' => v::noWhitespace()->notEmpty(),
             'password' => v::noWhitespace()->notEmpty(),
+            'nick_name' => v::optional(v::noWhitespace()->notEmpty()),
             'sex' => v::optional(v::intVal()->between(1, 2)),
         ]);
         if ($validation->failed()) {
@@ -69,6 +70,19 @@ class UserService extends Service
 
     public function updateUserInfo($request, $response)
     {
+        $validation = $this->validation->validate($request, [
+            'cellphone' => v::optional(v::phone()),
+            'nick_name' => v::optional(v::noWhitespace()->notEmpty()),
+            'avatar' => v::optional(v::noWhitespace()->notEmpty()),
+            'email' => v::optional(v::email()),
+            'decorate_progress' => v::optional(v::intVal()->between(1, 3)),
+            'decorate_style' => v::optional(v::intVal()),
+            'decorate_area' => v::optional(v::numeric()),
+            'sex' => v::optional(v::intVal()->between(1, 2)),
+        ]);
+        if ($validation->failed()) {
+            return $validation->outputError($response);
+        }
         $args = Help::getParams($request, $this->uid);
         $ret = UserModule::getInstance()->updateUserInfo($args);
         return Help::response($response, $ret);

@@ -16,6 +16,9 @@ return [
             'password' => '',
             'database' => 1
         ]
+    ],
+    'bucket' => [
+        'avatar' => 'http://o97tnvdt9.bkt.clouddn.com/',
     ]
 ];
 
