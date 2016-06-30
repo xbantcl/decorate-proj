@@ -174,10 +174,11 @@ class UserModule extends BaseModule
                 return false;
             }
             if (UserType::ORD_USER == $user->user_type) {
-                $userObj = OrdUser::select('dec_fund', 'decorate_style', 'decorate_type', 'decorate_progress')->where('uid', $uid)->first();
+                $userObj = OrdUser::select('uid', 'dec_fund', 'decorate_style', 'decorate_type', 'decorate_progress')->where('uid', $uid)->first();
             }
             $userInfo = array_merge($user->toArray(), $userObj->toArray());
         }
+        UserRedis::getInstance()->updateUserInfo($userInfo);
         if (UserType::ORD_USER == $userInfo['user_type']) {
             $userInfo['dec_fund'] = Help::calcDecFund($userInfo['dec_fund'] );
             $userInfo['decorate_style'] = DecorateType::getDecorateStyleName($userInfo['decorate_style']);
