@@ -242,7 +242,7 @@ class UserModule extends BaseModule
             return ResCode::formatError(ResCode::UPDATE_USER_INFO_FAILED);
         }
         DB::commit();
-        return true;
+        return $this->getUserInfo($data['uid']);
     }
 
     public function updatePassword(array $data)
