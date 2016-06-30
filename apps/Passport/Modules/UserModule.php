@@ -169,7 +169,7 @@ class UserModule extends BaseModule
     {
         $userInfo = UserRedis::getInstance()->getUserInfo($uid);
         if (!$userInfo) {
-            $user = User::select('id', 'avatar', 'sex', 'email', 'nick_name', 'invite_code', 'account', 'user_type')->where('id', $uid)->first();
+            $user = User::select('id', 'avatar', 'cellphone', 'sex', 'email', 'nick_name', 'invite_code', 'account', 'user_type')->where('id', $uid)->first();
             if (!$user instanceof User) {
                 return false;
             }
