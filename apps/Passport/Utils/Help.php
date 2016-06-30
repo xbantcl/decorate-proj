@@ -5,7 +5,8 @@ class Help
 {
     const USER_INVITE_LENGTH = 6;
     public static $castsRule = [
-            'int' => 'intval'
+            'int' => 'intval',
+            'float' => 'floatval'
     ];
 
     /**
