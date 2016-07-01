@@ -17,6 +17,10 @@ class User extends BaseModel {
         'modify_time' => 'int',
         'cellphone' => 'int',
         'sex' => 'int',
+        'decorate_style' => 'int',
+        'decorate_type' => 'int',
+        'dec_fund' => 'int',
+        'decorate_progress' => 'int'
     ];
 
     public static $rules = [
