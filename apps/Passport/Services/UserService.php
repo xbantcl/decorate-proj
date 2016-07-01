@@ -75,7 +75,7 @@ class UserService extends Service
             'nick_name' => v::optional(v::noWhitespace()->notEmpty()),
             'avatar' => v::optional(v::noWhitespace()->notEmpty()),
             'email' => v::optional(v::email()),
-            'decorate_progress' => v::optional(v::intVal()->between(1, 3)),
+            'decorate_progress' => v::optional(v::intVal()),
             'decorate_style' => v::optional(v::intVal()),
             'decorate_area' => v::optional(v::numeric()),
             'sex' => v::optional(v::intVal()->between(1, 2)),
