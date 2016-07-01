@@ -51,12 +51,6 @@ class UserModule extends BaseModule
                 $args['districts'] = '';
                 $data = array_intersect_key($args, OrdUser::$rules);
                 $userObj = OrdUser::create($data);
-                $ret['dec_fund'] = Help::calcDecFund($userObj->dec_fund);
-                $ret['decorate_style'] = DecorateType::getDecorateStyleName($userObj->decorate_style);
-                $ret['decorate_type'] = HouseType::getHouseStyleName($userObj->decorate_type);
-                $ret['districts'] = $userObj->districts;
-                $ret['decorate_area'] = $userObj->decorate_area;
-                $ret['decorate_progress'] = DecorateType::getDecorateStatus($userObj->decorate_progress);
             } elseif (UserType::SELLER == $data['user_type']) {
                 $data = array_intersect_key($args, Seller::$rules);
                 $userObj = Seller::create($data);
@@ -88,7 +82,7 @@ class UserModule extends BaseModule
             return ResCode::formatError(ResCode::SYSTEM_ERROR);
         }
         DB::commit();
-        return array_merge($ret, ['uid' => $user->id, 'user_type' => $user->user_type, 'avatar' => $user->avatar, 'sex' => $user->sex, 'sess' => $sessionName]);
+        return array_merge($userObj->toArray(), ['uid' => $user->id, 'user_type' => $user->user_type, 'avatar' => $user->avatar, 'sex' => $user->sex, 'sess' => $sessionName]);
     }
 
     /**
@@ -179,12 +173,6 @@ class UserModule extends BaseModule
             $userInfo = array_merge($user->toArray(), $userObj->toArray());
         }
         UserRedis::getInstance()->updateUserInfo($userInfo);
-        if (UserType::ORD_USER == $userInfo['user_type']) {
-            $userInfo['dec_fund'] = Help::calcDecFund($userInfo['dec_fund'] );
-            $userInfo['decorate_style'] = DecorateType::getDecorateStyleName($userInfo['decorate_style']);
-            $userInfo['decorate_type'] = HouseType::getHouseStyleName($$userInfo['decorate_type']);
-            $userInfo['decorate_progress'] = DecorateType::getDecorateStatus($userInfo['decorate_progress']);
-        }
         return $userInfo;
     }
 
@@ -220,7 +208,7 @@ class UserModule extends BaseModule
         }
         DB::beginTransaction();
         try {
-            User::where('id', $data['uid'])->update(array_intersect_key($data, User::$rules));
+            User::where('id', $data['uid'])->update(array_intersect_key($data, User::$updateRules));
             if (UserType::ORD_USER == $user->user_type) {
                 OrdUser::where('uid', $data['uid'])->update(array_intersect_key($data, OrdUser::$rules));
             } elseif (UserType::BOSS == $user->user_type) {

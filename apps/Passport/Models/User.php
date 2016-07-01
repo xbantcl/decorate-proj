@@ -44,4 +44,11 @@ class User extends BaseModel {
         'cli_v' => 'string',
         'cli_p' => 'string',
     ];
+
+    public static $updateRules = [
+        'nick_name' => 'string',
+        'avatar' => 'string',
+        'cellphone' => 'string',
+        'sex' => 'int',
+    ];
 }
