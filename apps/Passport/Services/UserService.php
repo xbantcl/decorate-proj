@@ -85,6 +85,9 @@ class UserService extends Service
         }
         $args = Help::getParams($request, $this->uid);
         $ret = UserModule::getInstance()->updateUserInfo($args);
+        if (isset($ret['code'])) {
+            return Help::response($response, null, $ret['code'], $ret['message']);
+        }
         return Help::response($response, $ret);
     }
 
@@ -98,6 +101,9 @@ class UserService extends Service
         }
         $args = Help::getParams($request, $this->uid);
         $ret = UserModule::getInstance()->updatePassword($args);
+        if (isset($ret['code'])) {
+            return Help::response($response, null, $ret['code'], $ret['message']);
+        }
         return Help::response($response, $ret);
     }
 }

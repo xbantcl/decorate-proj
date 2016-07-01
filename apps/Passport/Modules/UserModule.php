@@ -208,17 +208,20 @@ class UserModule extends BaseModule
         }
         DB::beginTransaction();
         try {
-            User::where('id', $data['uid'])->update(array_intersect_key($data, User::$updateRules));
-            if (UserType::ORD_USER == $user->user_type) {
-                OrdUser::where('uid', $data['uid'])->update(array_intersect_key($data, OrdUser::$rules));
-            } elseif (UserType::BOSS == $user->user_type) {
-                Boss::where('uid', $data['uid'])->update(array_intersect_key($data, Boss::$rules));
-            } elseif (UserType::SELLER == $user->user_type) {
-                Seller::where('uid', $data['uid'])->update(array_intersect_key($data, Seller::$rules));
-            } elseif (UserType::WORKER == $user->user_type) {
-                Worker::where('uid', $data['uid'])->update(array_intersect_key($data, Worker::$rules));
-            } elseif (UserType::DESIGNER == $user->user_type) {
-                Designer::where('uid', $data['uid'])->update(array_intersect_key($data, Designer::$rules));
+            $updateData = array_intersect_key($data, User::$updateRules);
+            if ($updateData) {
+                User::where('id', $data['uid'])->update($updateData);
+            }
+            if (UserType::ORD_USER == $user->user_type && $updateData = array_intersect_key($data, OrdUser::$rules)) {
+                OrdUser::where('uid', $data['uid'])->update($updateData);
+            } elseif (UserType::BOSS == $user->user_type && $updateData = array_intersect_key($data, Boss::$rules)) {
+                Boss::where('uid', $data['uid'])->update($updateData);
+            } elseif (UserType::SELLER == $user->user_type && $updateData = array_intersect_key($data, Seller::$rules)) {
+                Seller::where('uid', $data['uid'])->update($updateData);
+            } elseif (UserType::WORKER == $user->user_type && $updateData = array_intersect_key($data, Worker::$rules)) {
+                Worker::where('uid', $data['uid'])->update($updateData);
+            } elseif (UserType::DESIGNER == $user->user_type && $updateData = array_intersect_key($data, Designer::$rules)) {
+                Designer::where('uid', $data['uid'])->update($updateData);
             } else {
                 throw new \Exception(null, ResCode::INVALID_USER_TYPE);
             }
