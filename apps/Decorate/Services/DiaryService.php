@@ -13,17 +13,16 @@ class DiaryService extends Service
 
     /**
      * 添加装修日志.
-     * 
+     *
      * @param object $request
      * @param object $response
-     * 
+     *
      * @return json
      */
     public function add($request, $response)
     {
         $validation = $this->validation->validate($request, [
             'content' => v::noWhitespace()->notEmpty(),
-            'title' => v::noWhitespace()->notEmpty(),
             'decorate_progress' => v::notEmpty()->numeric(),
             'label_id' => v::numeric()
         ]);
