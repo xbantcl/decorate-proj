@@ -54,8 +54,9 @@ class FileModule extends BaseModule
             }
             File::insert($insertData);
             $files = File::select('id', 'mark_url')->where('uuid', $uuid)->get()->toArray();
+ 
             if (!empty($files) && FileType::DIARY_FILE == $type) {
-                $data = $this->formatByRule($files, DiaryFile::$rules);
+                $data = $this->formatByRule($resId, $files, DiaryFile::$rules);
                 if (!empty($data['insertData'])) {
                    DiaryFile::insert($data['insertData']);
                 }
@@ -72,23 +73,24 @@ class FileModule extends BaseModule
         return $fileList;
     }
 
-    public function formatByRule($data, $rule)
+    public function formatByRule($resId, $data, $rule)
     {
         $fileList = [];
         $insertData = [];
+        $nowTime = time();
         foreach ($data as $item) {
             $data = [
                 'diary_id' => $resId,
                 'diary_comment_id' => $resId,
-                'file_id' => $file['id'],
-                'file_url' => $file['mark_url'],
+                'file_id' => $item['id'],
+                'file_url' => $item['mark_url'],
                 'insert_time' => $nowTime,
                 'modify_time' => $nowTime
             ];
             $insertData[] = array_intersect_key($data, $rule);
             $fileList[] = [
-                'id' => $file['id'],
-                'url' => $file['mark_url']
+                'id' => $item['id'],
+                'url' => $item['mark_url']
             ];
         }
         return ['insertData' => $insertData, 'fileList' => $fileList];
