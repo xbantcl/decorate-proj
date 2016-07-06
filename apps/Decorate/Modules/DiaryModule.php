@@ -219,7 +219,7 @@ class DiaryModule extends BaseModule
             ->orderBy('diary.id', 'asc')
             ->where('diary.uid', $uid)
             ->get()->toArray();
-        return array_values($this->formatDiaryData($diaries));
+        return ['data' => array_values($this->formatDiaryData($diaries))];
     }
 
     public function formatDiaryData(array $diaries)
