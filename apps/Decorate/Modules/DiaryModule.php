@@ -145,7 +145,7 @@ class DiaryModule extends BaseModule
         if ($start > 0) {
             $query = $query->where('diary.id', '<', $start);
         }
-        $diaries = $query->take($limit + 1)->get()->toArray();
+        $diaries = $query->take(($limit + 1) * 9)->get()->toArray();
 
         if (empty($diaries)) {
             return ['start' => 0, 'more' => 0, 'data' => []];
@@ -159,6 +159,9 @@ class DiaryModule extends BaseModule
         foreach ($diaries as $diary) {
             if (!in_array($diary['uid'], $uids)) {
                 $uids[] = $diary['uid'];
+            }
+            if ($count > $limit) {
+                break;
             }
             // $diaryIds[] = $diary['id'];
             if (!isset($diaryList[$diary['id']])) {
