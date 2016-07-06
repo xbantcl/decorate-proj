@@ -202,7 +202,7 @@ class DiaryModule extends BaseModule
                     DB::rollback();
                     return $fileList;
                 }
-                $diary->fileList = $fileList;
+                $diaryComment->fileList = $fileList;
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -210,5 +210,43 @@ class DiaryModule extends BaseModule
         }
         DB::commit();
         return $diaryComment;
+    }
+
+    public function getUserDiaryList($uid)
+    {
+        $diaries = Diary::leftjoin('diary_file as df', 'df.diary_id', '=', 'diary.id')
+            ->select('diary.id', 'diary.title', 'diary.uid', 'diary.decorate_progress', 'diary.label_id', 'diary.content', 'diary.insert_time', 'df.file_id', 'df.file_url')
+            ->orderBy('diary.id', 'asc')
+            ->where('diary.uid', $uid)
+            ->get()->toArray();
+        return array_values($this->formatDiaryData($diaries));
+    }
+
+    public function formatDiaryData(array $diaries)
+    {
+        $uids = [];
+        $diaryList = [];
+        foreach ($diaries as $diary) {
+            if (!in_array($diary['uid'], $uids)) {
+                $uids[] = $diary['uid'];
+            }
+            if (!isset($diaryList[$diary['id']])) {
+                $temp = $diary;
+                unset($temp['file_id']);
+                unset($temp['file_url']);
+                $diaryList[$diary['id']] = $temp;
+            }
+            if (!empty($diary['file_id']) && !empty($diary['file_url'])) {
+                $diaryList[$diary['id']]['fileList'][] = ['id' => $diary['file_id'], 'url' => $diary['file_url']];
+            }
+        }
+
+        $usersInfo = UserModule::getInstance()->getUserInfoByBatch($uids, ['uid', 'avatar', 'nick_name']);
+        foreach ($diaryList as &$diary) {
+            if (isset($usersInfo[$diary['uid']])) {
+                $diary['user'] = $usersInfo[$diary['uid']];
+            }
+        }
+        return $diaryList;
     }
 }

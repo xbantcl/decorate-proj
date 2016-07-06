@@ -43,6 +43,11 @@ class Help
     }
 
     public static function response($response, $data = null, $code = 0, $message = 'success') {
+        if (isset($data['code'])) {
+            $code = $data['code'];
+            $message = $data['message'];
+            $data = null;
+        }
         return $response->withJson(['error_code' => $code, 'message' => $message, 'data'=> $data]);
     }
 

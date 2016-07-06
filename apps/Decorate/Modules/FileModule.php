@@ -61,7 +61,7 @@ class FileModule extends BaseModule
                    DiaryFile::insert($data['insertData']);
                 }
             } elseif (!empty($files) && FileType::DIARY_COMMENT_FILE == $type) {
-                $data = $this->formatByRule($files, DiaryCommentFile::$rules);
+                $data = $this->formatByRule($resId, $files, DiaryCommentFile::$rules);
                 if (!empty($data['insertData'])) {
                     DiaryCommentFile::insert($data['insertData']);
                 }

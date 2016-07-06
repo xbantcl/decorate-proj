@@ -35,11 +35,7 @@ class DiaryService extends Service
             $args['fileList'] = json_decode($args['fileList'], true);
         }
 
-        $ret = DiaryModule::getInstance()->add($args);
-        if (isset($ret['code'])) {
-            return Help::response($response, $ret['code'], $ret['message']);
-        }
-        return Help::response($response, $ret);
+        return Help::response($response, DiaryModule::getInstance()->add($args));
     }
 
     /**
@@ -101,7 +97,7 @@ class DiaryService extends Service
     {
         $validation = $this->validation->validate($request, [
             'diary_id' => v::numeric(),
-            'content' => noWhitespace()->notEmpty(),
+            'content' => v::noWhitespace()->notEmpty(),
             'parent_id' => v::optional(v::numeric()),
             'target_uid' => v::optional(v::numeric()),
         ]);
@@ -116,6 +112,19 @@ class DiaryService extends Service
         }
         $args['parent_id'] = isset($args['parent_id']) ? $args['parent_id'] : 0;
         $args['target_uid'] = isset($args['target_uid']) ? $args['target_uid'] : 0;
-        $ret = DiaryModule::getInstance()->commentDiary($args);
+        return Help::response($response, DiaryModule::getInstance()->commentDiary($args));
+    }
+
+    public function getUserDiaryList($req, $res)
+    {
+        $validation = $this->validation->validate($req, [
+            'uid' => v::intVal()->notEmpty(),
+        ]);
+        
+        if ($validation->failed()) {
+            return $validation->outputError($res);
+        }
+
+        return Help::response($res, DiaryModule::getInstance()->getUserDiaryList($this->uid));
     }
 }
