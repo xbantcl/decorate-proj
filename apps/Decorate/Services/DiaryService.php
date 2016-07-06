@@ -124,7 +124,7 @@ class DiaryService extends Service
         if ($validation->failed()) {
             return $validation->outputError($res);
         }
-
-        return Help::response($res, DiaryModule::getInstance()->getUserDiaryList($this->uid));
+        $args = Help::getParams($req);
+        return Help::response($res, DiaryModule::getInstance()->getUserDiaryList($args['uid']));
     }
 }
