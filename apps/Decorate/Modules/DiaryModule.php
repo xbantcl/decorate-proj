@@ -259,13 +259,17 @@ class DiaryModule extends BaseModule
     public function getDiaryCommentList($diaryId, $start, $limit)
     {
         $query = DiaryComment::leftjoin('diary_comment_file as dcf', 'dcf.diary_comment_id', '=', 'diary_comment.id')
-            ->select('diary_comment.id', 'diary_comment.uid', 'diary_comment.diary_id', 'diary_comment.parent_id', 'diary_comment.target_uid', 'dcf.file_id', 'dcf.file_url')
+            ->select('diary_comment.id', 'diary_comment.uid', 'diary_comment.content', 'diary_comment.parent_id', 'diary_comment.target_uid', 'dcf.file_id', 'dcf.file_url',
+                'diary_comment.insert_time') // 'dc.id as r_id', 'dc.uid as r_uid', 'dc.content as r_content', 'dc.parent_id as r_parent_id', 'dc.insert_time as r_insert_time')
+            //->leftjoin('diary_comment as dc', 'dc.parent_id', '=', 'diary_comment.id')
             ->where('diary_comment.diary_id', $diaryId)
+            ->where('diary_comment.parent_id', 0)
             ->orderBy('diary_comment.id', 'desc');
         if ($start > 0) {
             $query = $query->where('diary_comment.id', '<', $start);
         }
         $diaryComments = $query->take(($limit + 1) * 9)->get()->toArray();
+
         $more = 0;
         if (empty($diaryComments)) {
             return ['start' => $start, 'more' => $more, 'data' => (object)[]];
@@ -278,7 +282,30 @@ class DiaryModule extends BaseModule
         }
         $diaryComments = array_values($diaryComments);
         $start = end($diaryComments)['id'];
-        return ['start' => $start, 'more' => $more, 'data' => $diaryComments];
+        // 获取二级评论
+        $commentIds = [];
+        $replyComments = [];
+        foreach ($diaryComments as $diaryComment) {
+            $commentIds[] = $diaryComment['id'];
+        }
+        if ($commentIds) {
+            $replyComments = DiaryComment::leftjoin('diary_comment_file as dcf', 'dcf.diary_comment_id', '=', 'diary_comment.id')
+                ->select('diary_comment.id', 'diary_comment.uid', 'diary_comment.content', 'diary_comment.parent_id', 'diary_comment.target_uid', 'dcf.file_id', 'dcf.file_url',
+                    'diary_comment.insert_time')
+                ->whereIn('diary_comment.parent_id', $commentIds)
+                ->get()->toArray();
+            $replyComments = $this->formatDiaryData($replyComments);
+        }
+        $diaryCommentList = array_map(function($item) use ($replyComments) {
+            foreach ($replyComments as $replyComment) {
+                if ($item['id'] == $replyComment['parent_id']) {
+                    $item['reply_comment'][] = $replyComment;
+                }
+            }
+            return $item;
+        }, $diaryComments);
+
+        return ['start' => $start, 'more' => $more, 'data' => $diaryCommentList];
     }
 
     public function getDiaryCommentById(array $diaryIds)
