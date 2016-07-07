@@ -9,7 +9,7 @@ use Slim\Container;
 
 class BaseRedis
 {
-    protected static $instance = [];
+    protected static $redisInstance = [];
     protected $config = null;
     protected $redisPath = '';
 
@@ -42,9 +42,9 @@ class BaseRedis
     }
 
     public function __call($method, $args) {
-        if (empty(static::$instance[$this->config]) || ! static::$instance[$this->config] instanceof Client) {
-            static::$instance[$this->config] = $this->connect();
+        if (empty(static::$redisInstance[$this->config]) || ! static::$redisInstance[$this->config] instanceof Client) {
+            static::$redisInstance[$this->config] = $this->connect();
         }
-        return call_user_func_array([static::$instance[$this->config], $method], $args);
+        return call_user_func_array([static::$redisInstance[$this->config], $method], $args);
     }
 }

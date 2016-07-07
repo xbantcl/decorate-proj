@@ -16,6 +16,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Decorate\Enum\FileType;
 use Decorate\Models\DecorateLabel;
 use Decorate\Models\DiaryComment;
+use Decorate\Redis\DiaryRedis;
 
 class DiaryModule extends BaseModule
 {
@@ -209,6 +210,7 @@ class DiaryModule extends BaseModule
             return ResCode::formatError(ResCode::ADD_DIARY_FAILED);
         }
         DB::commit();
+        DiaryRedis::getInstance()->comment($data['diary_id']);
         return $diaryComment;
     }
 
@@ -219,7 +221,12 @@ class DiaryModule extends BaseModule
             ->orderBy('diary.id', 'asc')
             ->where('diary.uid', $uid)
             ->get()->toArray();
-        return ['data' => array_values($this->formatDiaryData($diaries))];
+        $diarieList = array_values($this->formatDiaryData($diaries));
+        $data = array_map(function ($diary) {
+            $diary['counter'] = DiaryRedis::getInstance()->getCounter($diary['id']);
+            return $diary;
+        }, $diarieList);
+        return ['data' => $data];
     }
 
     public function formatDiaryData(array $diaries)
