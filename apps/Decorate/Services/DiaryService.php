@@ -127,4 +127,21 @@ class DiaryService extends Service
         $args = Help::getParams($req);
         return Help::response($res, DiaryModule::getInstance()->getUserDiaryList($args['uid']));
     }
+
+    public function getDiaryCommentList($req, $res)
+    {
+        $validation = $this->validation->validate($req, [
+            'diary_id' => v::intVal()->notEmpty(),
+            'start' => v::optional(v::numeric()),
+            'limit' => v::optional(v::numeric())
+        ]);
+        
+        if ($validation->failed()) {
+            return $validation->outputError($res);
+        }
+        $args['start'] = isset($args['start']) ? $args['start'] : 0;
+        $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
+        $args = Help::getParams($req);
+        return Help::response($res, DiaryModule::getInstance()->getDiaryCommentList($args['diary_id'], $args['start'], $args['limit']));
+    }
 }

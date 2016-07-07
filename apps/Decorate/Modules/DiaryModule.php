@@ -51,7 +51,7 @@ class DiaryModule extends BaseModule
     public function getLabelNameById($labelId) {
         $label = DecorateLabel::select('name')->find($labelId);
         if (!$label instanceof DecorateLabel) {
-            return '未知道';
+            return '未知标签';
         }
         return $label->name;
     }
@@ -148,7 +148,7 @@ class DiaryModule extends BaseModule
         $diaries = $query->take(($limit + 1) * 9)->get()->toArray();
 
         if (empty($diaries)) {
-            return ['start' => 0, 'more' => 0, 'data' => []];
+            return ['start' => 0, 'more' => 0, 'data' => (object)[]];
         }
 
         $uids = [];
@@ -184,7 +184,7 @@ class DiaryModule extends BaseModule
         }
         if ($count > $limit) {
             $more = 1;
-            array_pop($diaryList);
+            $diaryList = array_slice($diaryList, 0, $limit);
         }
         $start = end($diaryList)['id'];
         return ['start' => $start, 'more' => $more, 'data' => array_values($diaryList)];
@@ -248,5 +248,35 @@ class DiaryModule extends BaseModule
             }
         }
         return $diaryList;
+    }
+
+    public function getDiaryCommentList($diaryId, $start, $limit)
+    {
+        $query = DiaryComment::leftjoin('diary_comment_file as dcf', 'dcf.diary_comment_id', '=', 'diary_comment.id')
+            ->select('diary_comment.id', 'diary_comment.uid', 'diary_comment.diary_id', 'diary_comment.parent_id', 'diary_comment.target_uid', 'dcf.file_id', 'dcf.file_url')
+            ->where('diary_comment.diary_id', $diaryId)
+            ->orderBy('diary_comment.id', 'desc');
+        if ($start > 0) {
+            $query = $query->where('diary_comment.id', '<', $start);
+        }
+        $diaryComments = $query->take(($limit + 1) * 9)->get()->toArray();
+        $more = 0;
+        if (empty($diaryComments)) {
+            return ['start' => $start, 'more' => $more, 'data' => (object)[]];
+        }
+        $diaryComments = $this->formatDiaryData($diaryComments);
+
+        if (count($diaryComments) > $limit) {
+            $more = 1;
+            $diaryComments = array_slice($diaryComments, 0, $limit);
+        }
+        $diaryComments = array_values($diaryComments);
+        $start = end($diaryComments)['id'];
+        return ['start' => $start, 'more' => $more, 'data' => $diaryComments];
+    }
+
+    public function getDiaryCommentById(array $diaryIds)
+    {
+
     }
 }
