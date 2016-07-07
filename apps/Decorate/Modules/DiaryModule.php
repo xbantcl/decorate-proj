@@ -31,6 +31,7 @@ class DiaryModule extends BaseModule
         DB::beginTransaction();
         try {
             $diaryData = array_intersect_key($data, Diary::$rules);
+            $diaryData['insert_time'] = $data['add_time'];
             $diary = Diary::create($diaryData);
             if (!empty($data['fileList'])) {
                 $fileList = FileModule::getInstance()->add($diary->id, $data['fileList'], FileType::DIARY_FILE, 'decorate-pic');

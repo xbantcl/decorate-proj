@@ -24,7 +24,8 @@ class DiaryService extends Service
         $validation = $this->validation->validate($request, [
             'content' => v::noWhitespace()->notEmpty(),
             'decorate_progress' => v::intVal(),
-            'label_id' => v::numeric()
+            'label_id' => v::numeric(),
+            'add_time' => v::intVal()->notEmpty()
         ]);
 
         if ($validation->failed()) {
