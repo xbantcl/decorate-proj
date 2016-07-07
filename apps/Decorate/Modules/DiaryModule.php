@@ -230,6 +230,9 @@ class DiaryModule extends BaseModule
             if (!in_array($diary['uid'], $uids)) {
                 $uids[] = $diary['uid'];
             }
+            if (isset($diary['target_uid']) && $diary['target_uid'] > 0 && !in_array($diary['target_uid'], $uids)) {
+                $uids[] = $diary['target_uid'];
+            }
             if (!isset($diaryList[$diary['id']])) {
                 $temp = $diary;
                 unset($temp['file_id']);
@@ -245,6 +248,9 @@ class DiaryModule extends BaseModule
         foreach ($diaryList as &$diary) {
             if (isset($usersInfo[$diary['uid']])) {
                 $diary['user'] = $usersInfo[$diary['uid']];
+            }
+            if (isset($diary['target_uid']) && isset($usersInfo[$diary['target_uid']])) {
+                $diary['puser'] = $usersInfo[$diary['target_uid']];
             }
         }
         return $diaryList;
