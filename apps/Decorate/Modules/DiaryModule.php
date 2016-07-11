@@ -171,6 +171,7 @@ class DiaryModule extends BaseModule
                 unset($temp['file_id']);
                 unset($temp['file_url']);
                 $diaryList[$diary['id']] = $temp;
+                $diaryList[$diary['id']]['counter'] = DiaryRedis::getInstance()->getCounter($diary['id']);
                 $count ++;
             }
             if (!empty($diary['file_id']) && !empty($diary['file_url'])) {
