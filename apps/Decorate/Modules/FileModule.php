@@ -13,6 +13,8 @@ use Decorate\Utils\Help;
 use Decorate\Enum\ResCode;
 use Decorate\Enum\FileType;
 use Decorate\Models\DiaryCommentFile;
+use Decorate\Models\DiscussFile;
+use Decorate\Models\DiscussCommentFile;
 
 
 class FileModule extends BaseModule
@@ -65,6 +67,16 @@ class FileModule extends BaseModule
                 if (!empty($data['insertData'])) {
                     DiaryCommentFile::insert($data['insertData']);
                 }
+            } elseif (!empty($files) && FileType::DISCUSS_FILE == $type) {
+                $data = $this->formatByRule($resId, $files, DiscussFile::$rules);
+                if (!empty($data['insertData'])) {
+                    DiscussFile::insert($data['insertData']);
+                }
+            } elseif (!empty($files) && FileType::DISCUSS_COMMENT_FILE == $type) {
+                $data = $this->formatByRule($resId, $files, DiscussCommentFile::$rules);
+                if (!empty($data['insertData'])) {
+                    DiscussCommentFile::insert($data['insertData']);
+                }
             }
         } catch (\Exception $e) {
             return ResCode::formatError(ResCode::ADD_DIARY_FAILED);
@@ -82,6 +94,8 @@ class FileModule extends BaseModule
             $data = [
                 'diary_id' => $resId,
                 'diary_comment_id' => $resId,
+                'discuss_id' => $resId,
+                'discuss_comment_id' => $resId,
                 'file_id' => $item['id'],
                 'file_url' => $item['mark_url'],
                 'insert_time' => $nowTime,

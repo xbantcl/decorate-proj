@@ -1,3 +1,4 @@
+/*
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -187,11 +188,12 @@ CREATE TABLE `diary_comment_file` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='日志评论图片数据表';
 
+*/
 DROP TABLE IF EXISTS `discuss`;
 CREATE TABLE `discuss` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
-    `decorate_label` varchar(32) DEFAULT '' COMMENT '装修标签',
+    `label_id` varchar(32) DEFAULT '' COMMENT '装修标签',
     `content` varchar(2048) NOT NULL COMMENT '讨论内容',
     `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',

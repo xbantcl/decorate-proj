@@ -40,10 +40,10 @@ class Validator
     public function outputError($response)
     {
         if ($this->failed()) {
-            return $response->write(json_encode([
+            return $response->withJson([
                 'error_code' => -1,
                 'message' => current(current($this->errors)),
-            ]));
+            ]);
         }
     }
 }

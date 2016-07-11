@@ -8,6 +8,8 @@ class ResCode
     const ADD_DIARY_FAILED = 20003;
     const ADD_FILE_FAILED = 20004;
     const FILE_BUCKET_NOT_EXIST = 20005;
+    const ADD_DISCUSS_FAILED = 20006;
+    const DISCUSS_NOT_EXIT = 20007;
 
     public static $errorMessage = [
         self::SYSTEM_ERROR => '系统错误',
@@ -16,6 +18,8 @@ class ResCode
         self::ADD_DIARY_FAILED => '添加装修日记失败',
         self::ADD_FILE_FAILED => '添加文件失败',
         self::FILE_BUCKET_NOT_EXIST => '上传文件bucket不存在',
+        self::DISCUSS_NOT_EXIT => '讨论问题不存在.',
+        self::ADD_DISCUSS_FAILED => '发布问题失败',
     ];
     
     public static function formatError($code)
