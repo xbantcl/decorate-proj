@@ -10,6 +10,8 @@ class ResCode
     const FILE_BUCKET_NOT_EXIST = 20005;
     const ADD_DISCUSS_FAILED = 20006;
     const DISCUSS_NOT_EXIT = 20007;
+    const COLLECTION_FAILED = 20008;
+    const COLLECTION_EXIST = 20009;
 
     public static $errorMessage = [
         self::SYSTEM_ERROR => '系统错误',
@@ -20,6 +22,8 @@ class ResCode
         self::FILE_BUCKET_NOT_EXIST => '上传文件bucket不存在',
         self::DISCUSS_NOT_EXIT => '讨论问题不存在.',
         self::ADD_DISCUSS_FAILED => '发布问题失败',
+        self::COLLECTION_FAILED => '收藏失败',
+        self::COLLECTION_EXIST => '已经收藏',
     ];
     
     public static function formatError($code)

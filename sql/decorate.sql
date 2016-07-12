@@ -188,7 +188,6 @@ CREATE TABLE `diary_comment_file` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='日志评论图片数据表';
 
-*/
 DROP TABLE IF EXISTS `discuss`;
 CREATE TABLE `discuss` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -244,3 +243,15 @@ CREATE TABLE `decorate_label` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='装修标签';
+*/
+
+DROP TABLE IF EXISTS `collection`;
+CREATE TABLE `collection` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `type` tinyint(4) NOT NULL COMMENT '收藏类型: 1-日记， 2-讨论',
+    `uid` int(11) unsigned NOT NULL COMMENT '用户id',
+    `data_id` int(11) unsigned NOT NULL COMMENT '收藏数据id',
+    `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='收藏表';

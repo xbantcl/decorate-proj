@@ -253,4 +253,21 @@ class DiscussModule extends BaseModule
         return ['start' => $start, 'more' => $more, 'data' => $discussCommentList];
     }
 
+    public function getDiscussByIds(array $discussIds)
+    {
+        if (!$discussIds) {
+            return [];
+        }
+        $discusses = Discuss::leftjoin('discuss_file as df', 'df.discuss_id', '=', 'discuss.id')
+            ->select('discuss.id', 'discuss.title', 'discuss.uid', 'discuss.label_id', 'discuss.content', 'discuss.insert_time', 'df.file_id', 'df.file_url')
+            ->orderBy('discuss.id', 'asc')
+            ->where('discuss.uid', $uid)
+            ->get()->toArray();
+        $discussesList = array_values($this->formatDiscussData($discusses));
+        $data = array_map(function ($discuss) {
+            $discuss['counter'] = DiscussRedis::getInstance()->getCounter($discuss['id']);
+            return $discuss;
+        }, $discussesList);
+        return $data;
+    }
 }

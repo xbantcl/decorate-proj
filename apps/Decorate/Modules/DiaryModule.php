@@ -317,8 +317,21 @@ class DiaryModule extends BaseModule
         return ['start' => $start, 'more' => $more, 'data' => $diaryCommentList];
     }
 
-    public function getDiaryCommentById(array $diaryIds)
+    public function getDiaryByIds(array $diaryIds)
     {
-
+        if (!$diaryIds) {
+            return [];
+        }
+        $diaries = Diary::leftjoin('diary_file as df', 'df.diary_id', '=', 'diary.id')
+            ->select('diary.id', 'diary.title', 'diary.uid', 'diary.decorate_progress', 'diary.label_id', 'diary.content', 'diary.insert_time', 'df.file_id', 'df.file_url')
+            ->orderBy('diary.id', 'asc')
+            ->where('diary.id', $diaryIds)
+            ->get()->toArray();
+        $diarieList = array_values($this->formatDiaryData($diaries));
+        $data = array_map(function ($diary) {
+            $diary['counter'] = DiaryRedis::getInstance()->getCounter($diary['id']);
+            return $diary;
+        }, $diarieList);
+        return $data;
     }
 }
