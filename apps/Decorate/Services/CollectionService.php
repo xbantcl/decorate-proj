@@ -48,4 +48,24 @@ class CollectionService extends Service
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
         return Help::response($res, CollectionModule::getInstance()->getList($args['uid'], $args['type'], $args['start'], $args['limit']));
     }
+
+    /**
+     * 删除收藏.
+     * 
+     * @param object $req
+     * @param object $res
+     */
+    public function delete($req, $res)
+    {
+        $validation = $this->validation->validate($req, [
+            'type' => v::intVal()->notEmpty(),
+            'data_id' => v::intVal()->notEmpty(),
+        ]);
+
+        if ($validation->failed()) {
+            return $validation->outputError($res);
+        }
+        $args = Help::getParams($req, $this->uid);
+        return Help::response($res, CollectionModule::getInstance()->delete($args['uid'], $args['type'], $args['data_id']));
+    }
 }

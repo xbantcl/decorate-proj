@@ -138,7 +138,7 @@ class DiaryModule extends BaseModule
         }
     }
 
-    public function getDiaryList($start = 0, $limit = 15)
+    public function getDiaryList($uid, $start = 0, $limit = 15)
     {
         $query = Diary::leftjoin('diary_file as df', 'df.diary_id', '=', 'diary.id')
             ->select('diary.id', 'diary.title', 'diary.uid', 'diary.decorate_progress', 'diary.label_id', 'diary.content', 'diary.insert_time', 'df.file_id', 'df.file_url')
@@ -172,6 +172,7 @@ class DiaryModule extends BaseModule
                 unset($temp['file_url']);
                 $diaryList[$diary['id']] = $temp;
                 $diaryList[$diary['id']]['counter'] = DiaryRedis::getInstance()->getCounter($diary['id']);
+                $diaryList[$diary['id']]['isCollected'] = DiaryRedis::getInstance()->isCollection($diary['id'], $uid);
                 $count ++;
             }
             if (!empty($diary['file_id']) && !empty($diary['file_url'])) {
@@ -226,12 +227,13 @@ class DiaryModule extends BaseModule
         $diarieList = array_values($this->formatDiaryData($diaries));
         $data = array_map(function ($diary) {
             $diary['counter'] = DiaryRedis::getInstance()->getCounter($diary['id']);
+            $diary['isCollected'] = DiaryRedis::getInstance()->isCollection($diary['id'], $uid);
             return $diary;
         }, $diarieList);
         return ['data' => $data];
     }
 
-    public function formatDiaryData(array $diaries)
+    public function formatDiaryData(array $diaries, $uid)
     {
         $uids = [];
         $diaryList = [];

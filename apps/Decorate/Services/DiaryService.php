@@ -86,7 +86,7 @@ class DiaryService extends Service
         }
         $args = Help::getParams($request, $this->uid);
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
-        return Help::response($response, DiaryModule::getInstance()->getDiaryList(intval($args['start']), $args['limit']));
+        return Help::response($response, DiaryModule::getInstance()->getDiaryList($args['uid'], intval($args['start']), $args['limit']));
     }
 
     public function getLabelTree($request, $response)

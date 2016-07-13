@@ -86,7 +86,7 @@ class DiscussModule extends BaseModule
         }
     }
 
-    public function getDiscussList($start = 0, $limit = 15)
+    public function getDiscussList($uid, $start = 0, $limit = 15)
     {
         $query = Discuss::leftjoin('discuss_file as df', 'df.discuss_id', '=', 'discuss.id')
             ->select('discuss.id', 'discuss.uid', 'discuss.label_id', 'discuss.content', 'discuss.insert_time', 'df.file_id', 'df.file_url')
@@ -119,6 +119,7 @@ class DiscussModule extends BaseModule
                 unset($temp['file_url']);
                 $discussList[$discuss['id']] = $temp;
                 $discussList[$discuss['id']]['counter'] = DiscussRedis::getInstance()->getCounter($discuss['id']);
+                $discussList[$discuss['id']]['isCollected'] = DiscussRedis::getInstance()->isCollection($discuss['id'], $uid);
                 $count ++;
             }
             if (!empty($discuss['file_id']) && !empty($discuss['file_url'])) {

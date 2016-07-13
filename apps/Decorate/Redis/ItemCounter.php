@@ -19,9 +19,33 @@ trait ItemCounter
     }
 
     // 收藏数.
-    public function collection($dataId)
+    public function collection($dataId, $uid)
     {
         $this->HINCRBY($this->getKey($dataId), 'sc', self::INCR_STEP);
+        $this->SADD($this->getColKey($dataId), $uid);
+    }
+
+    // 收藏数减少.
+    public function uncollection($dataId, $uid)
+    {
+        $this->HINCRBY($this->getKey($dataId), 'sc', self::REDU_STEP);
+        $this->SREM($this->getColKey($dataId), $uid);
+    }
+
+    public function collectionUsers($dataId, $uid)
+    {
+        $this->SADD($this->getColKey($dataId), $uid);
+    }
+
+    /**
+     * 判断是否收藏.
+     * 
+     * @param integer $dataId
+     * @param integer $uid
+     */
+    public function isCollection($dataId, $uid)
+    {
+        return boolval($this->SISMEMBER($this->getColKey($dataId), $uid));
     }
 
     public function getCounter($dataId)
@@ -32,4 +56,5 @@ trait ItemCounter
         $counter['sc'] = isset($counter['sc']) ? intval($counter['sc']) : 0;
         return $counter;
     }
+
 }

@@ -84,7 +84,7 @@ class DiscussService extends Service
         }
         $args = Help::getParams($request, $this->uid);
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
-        return Help::response($response, DiscussModule::getInstance()->getDiscussList(intval($args['start']), $args['limit']));
+        return Help::response($response, DiscussModule::getInstance()->getDiscussList($args['uid'], intval($args['start']), $args['limit']));
     }
 
     public function commentDiscuss($request, $response)

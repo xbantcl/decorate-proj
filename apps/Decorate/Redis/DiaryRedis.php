@@ -31,4 +31,9 @@ class DiaryRedis extends BaseRedis implements CounterInterface
     public function getKey($dataId) {
         return self::PREFFIX . $dataId;
     }
+
+    public function getColKey($dataId)
+    {
+        return self::PREFFIX . 'col#' . $dataId;
+    }
 }

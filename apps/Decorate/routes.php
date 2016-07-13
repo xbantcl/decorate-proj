@@ -29,4 +29,5 @@ $app->group('/decorate/v1/', function () use ($container) {
     // ------------------ 收藏接口 --------------------------------------
     $this->post('collection/add', 'Decorate\Services\CollectionService:add');
     $this->post('collection/list', 'Decorate\Services\CollectionService:getList');
+    $this->post('collection/delete', 'Decorate\Services\CollectionService:delete');
 })->add(new AuthMiddleware($container));
