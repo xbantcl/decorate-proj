@@ -1,7 +1,7 @@
 <?php namespace Decorate\Modules;
 /**
  * DiscussModule class.
- * 
+ *
  * @author Anxiaobo <xbantcl@gmail.com>
  * @date 2016-06-13
  */
@@ -22,9 +22,9 @@ class DiscussModule extends BaseModule
 {
     /**
      * 添加讨论问题.
-     * 
+     *
      * @param array $data
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\static
      */
     public function add(array $data) {
@@ -261,7 +261,7 @@ class DiscussModule extends BaseModule
         $discusses = Discuss::leftjoin('discuss_file as df', 'df.discuss_id', '=', 'discuss.id')
             ->select('discuss.id', 'discuss.title', 'discuss.uid', 'discuss.label_id', 'discuss.content', 'discuss.insert_time', 'df.file_id', 'df.file_url')
             ->orderBy('discuss.id', 'asc')
-            ->where('discuss.uid', $uid)
+            ->whereIn('discuss.id', $discussIds)
             ->get()->toArray();
         $discussesList = array_values($this->formatDiscussData($discusses));
         $data = array_map(function ($discuss) {
