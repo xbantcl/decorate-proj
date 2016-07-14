@@ -233,7 +233,7 @@ class DiaryModule extends BaseModule
         return ['data' => $data];
     }
 
-    public function formatDiaryData(array $diaries, $uid)
+    public function formatDiaryData(array $diaries)
     {
         $uids = [];
         $diaryList = [];
