@@ -108,9 +108,9 @@ class CollectionModule extends BaseModule
         $ret = Collection::where('uid', $uid)->where('type', $type)->where('data_id', $dataId)->delete();
         if ($ret) {
             if (CollectionType::DIARY_TYPE ==  $type) {
-                DiaryRedis::getInstance()->uncollection($dataId, $data['uid']);
+                DiaryRedis::getInstance()->uncollection($dataId, uid);
             } elseif (CollectionType::DISCUSS_TYPE == $type) {
-                DiscussRedis::getInstance()->uncollection($dataId, $data['uid']);
+                DiscussRedis::getInstance()->uncollection($dataId, $uid);
             }
         }
     }
