@@ -225,7 +225,7 @@ class DiaryModule extends BaseModule
             ->where('diary.uid', $uid)
             ->get()->toArray();
         $diarieList = array_values($this->formatDiaryData($diaries));
-        $data = array_map(function ($diary) {
+        $data = array_map(function ($diary) use ($uid) {
             $diary['counter'] = DiaryRedis::getInstance()->getCounter($diary['id']);
             $diary['isCollected'] = DiaryRedis::getInstance()->isCollection($diary['id'], $uid);
             return $diary;
