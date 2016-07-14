@@ -260,7 +260,7 @@ class DiscussModule extends BaseModule
             return [];
         }
         $discusses = Discuss::leftjoin('discuss_file as df', 'df.discuss_id', '=', 'discuss.id')
-            ->select('discuss.id', 'discuss.title', 'discuss.uid', 'discuss.label_id', 'discuss.content', 'discuss.insert_time', 'df.file_id', 'df.file_url')
+            ->select('discuss.id', 'discuss.uid', 'discuss.label_id', 'discuss.content', 'discuss.insert_time', 'df.file_id', 'df.file_url')
             ->orderBy('discuss.id', 'asc')
             ->whereIn('discuss.id', $discussIds)
             ->get()->toArray();

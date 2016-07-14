@@ -11,6 +11,8 @@ use Decorate\Enum\ResCode;
 use Decorate\Enum\CollectionType;
 use Decorate\Redis\DiaryRedis;
 use Decorate\Redis\DiscussRedis;
+use Decorate\Models\Diary;
+use Decorate\Models\Discuss;
 
 class CollectionModule extends BaseModule
 {
@@ -26,6 +28,16 @@ class CollectionModule extends BaseModule
         if ($collection instanceof Collection) {
             return ResCode::formatError(ResCode::COLLECTION_EXIST);
         }
+        if (CollectionType::DIARY_TYPE == $data['type']) {
+            $diary = Diary::select('id')->find($data['data_id']);
+            if (!$diary instanceof Diary) {
+                return ResCode::formatError(ResCode::DIARY_NOT_EXIST);
+            }
+        } elseif (CollectionType::DISCUSS_TYPE == $data['data_id']) {
+            if (!$discuss instanceof Discuss) {
+                return ResCode::formatError(ResCode::DISCUSS_NOT_EXIT);
+            }
+        }
         $collectionData = array_intersect_key($data, Collection::$rules);
         try {
             Collection::create($collectionData);
@@ -34,7 +46,7 @@ class CollectionModule extends BaseModule
         }
         if (CollectionType::DIARY_TYPE ==  $data['type']) {
             DiaryRedis::getInstance()->collection($data['data_id'], $data['uid']);
-        } elseif (CollectionType::DISCUSS_TYPE == $args['type']) {
+        } elseif (CollectionType::DISCUSS_TYPE == $data['type']) {
             DiscussRedis::getInstance()->collection($data['data_id'], $data['uid']);
         }
         return true;

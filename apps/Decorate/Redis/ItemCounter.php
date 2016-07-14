@@ -45,7 +45,11 @@ trait ItemCounter
      */
     public function isCollection($dataId, $uid)
     {
-        return boolval($this->SISMEMBER($this->getColKey($dataId), $uid));
+        $ret = $this->SISMEMBER($this->getColKey($dataId), $uid);
+        if ($ret) {
+            return 1;
+        }
+        return 0;
     }
 
     public function getCounter($dataId)
