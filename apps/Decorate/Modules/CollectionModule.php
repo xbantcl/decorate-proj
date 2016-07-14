@@ -86,13 +86,13 @@ class CollectionModule extends BaseModule
         }
         if (CollectionType::DIARY_TYPE == $type) {
             $data = DiaryModule::getInstance()->getDiaryByIds($colIds);
-            $dataList = array_map(function($diary) {
+            $dataList = array_map(function($diary) use ($uid) {
                 $diary['isCollected'] = DiaryRedis::getInstance()->isCollection($diary['id'], $uid);
                 return $diary;
             }, $data);
         } elseif (CollectionType::DISCUSS_TYPE == $type) {
             $data = DiscussModule::getInstance()->getDiscussByIds($colIds);
-            $dataList = array_map(function ($discuss) {
+            $dataList = array_map(function ($discuss) use ($uid) {
                 $discuss['isCollected'] = DiscussRedis::getInstance()->isCollection($discuss['id'], $uid);
                 return $discuss;
             }, $data);
