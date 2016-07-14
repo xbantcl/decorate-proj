@@ -33,7 +33,8 @@ class CollectionModule extends BaseModule
             if (!$diary instanceof Diary) {
                 return ResCode::formatError(ResCode::DIARY_NOT_EXIST);
             }
-        } elseif (CollectionType::DISCUSS_TYPE == $data['data_id']) {
+        } elseif (CollectionType::DISCUSS_TYPE == $data['type']) {
+            $discuss = Discuss::select('id')->find($data['data_id']);
             if (!$discuss instanceof Discuss) {
                 return ResCode::formatError(ResCode::DISCUSS_NOT_EXIT);
             }
