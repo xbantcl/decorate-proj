@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Request;
 
-class UserService
+class UserService extends Service
 {
     /**
      * The database table used by the model.

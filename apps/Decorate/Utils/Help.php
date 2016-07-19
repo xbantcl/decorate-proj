@@ -92,4 +92,12 @@ class Help
             . chr(125);
         return $uuid;
     }
+
+    public static function translateAvatar(array &$data)
+    {
+        if (!empty($data['avatar'])) {
+            $avatarDomin = Help::config('bucket')['avatar'];
+            $data['avatar'] = $avatarDomin . $data['avatar'];
+        }
+    }
 }

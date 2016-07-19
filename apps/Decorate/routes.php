@@ -30,4 +30,9 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('collection/add', 'Decorate\Services\CollectionService:add');
     $this->post('collection/list', 'Decorate\Services\CollectionService:getList');
     $this->post('collection/delete', 'Decorate\Services\CollectionService:delete');
+    // ------------------ 同步接口 --------------------------------------
+    $this->post('data/sync', 'Decorate\Services\SyncService:getBasicData');
+    // ------------------ 添加商铺 --------------------------------------
+    $this->post('shop/add', 'Decorate\Services\ShopService::add');
+    $this->post('shop/list', 'Decorate\Services\ShopService::getList');
 })->add(new AuthMiddleware($container));

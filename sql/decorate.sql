@@ -54,28 +54,35 @@ CREATE TABLE `seller` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='商家用户数据表';
-
+*/
 DROP TABLE IF EXISTS `shop`;
 CREATE TABLE `shop` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
+    `avatar` varchar(255) DEFAULT '' COMMENT '商铺头像',
+    `goods_id` int(11) unsigned NOT NULL COMMENT '商品id',
+    `works_id` int(11) unsigned NOT NULL COMMENT '作品id',
     `area_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '地区id',
-    `shop_name` varchar(1024) DEFAULT '' COMMENT '商家名称',
-    `location_longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
-    `location_latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
+    `status` tinyint(4) DEFAULT 1 COMMENT '商铺状态, 1-营业中, 2-休整中, 3-打烊中',
+    `name` varchar(1024) DEFAULT '' COMMENT '商家名称',
+    `intr` varchar(2048) DEFAULT '' COMMENT '商铺介绍',
+    `business` varchar(2048) DEFAULT '' COMMENT '商铺业务',
+    `region` varchar(255) DEFAULT '' COMMENT '商铺经营区域',
+    `longitude` float DEFAULT 0.0 COMMENT '用户注册经度',
+    `latitude` float DEFAULT 0.0 COMMENT '用户注册纬度',
     `insert_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '注册时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='商家用户数据表';
-
+/*
 DROP TABLE IF EXISTS `boss`;
 CREATE TABLE `boss` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
     `area_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '地区id',
     `name` varchar(1024) DEFAULT '' COMMENT '商家名称',
-    `location_longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
-    `location_latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
+    `longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
+    `latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
     `verify_status` tinyint(4) DEFAULT 1 COMMENT '认证状态, 1-手机通过认证, 2-手机未通过认证',
     `insert_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '注册时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '修改时间',
@@ -88,8 +95,8 @@ CREATE TABLE `company` (
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
     `area_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '地区id',
     `company_name` varchar(1024) DEFAULT '' COMMENT '商家名称',
-    `location_longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
-    `location_latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
+    `longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
+    `latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
     `insert_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '注册时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '修改时间',
     PRIMARY KEY (`id`)
@@ -101,8 +108,8 @@ CREATE TABLE `designer` (
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
     `area_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '地区id',
     `name` varchar(1024) DEFAULT '' COMMENT '设计师名称',
-    `location_longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
-    `location_latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
+    `longitude` varchar(25) DEFAULT '' COMMENT '用户注册经度',
+    `latitude` varchar(25) DEFAULT '' COMMENT '用户注册纬度',
     `verify_status` tinyint(4) DEFAULT 1 COMMENT '认证状态, 1-手机通过认证, 2-手机未通过认证',
     `insert_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '注册时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '修改时间',
@@ -243,7 +250,6 @@ CREATE TABLE `decorate_label` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='装修标签';
-*/
 
 DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection` (
@@ -255,3 +261,4 @@ CREATE TABLE `collection` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='收藏表';
+*/
