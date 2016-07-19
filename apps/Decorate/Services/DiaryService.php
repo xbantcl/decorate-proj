@@ -10,7 +10,6 @@ use Decorate\Utils\Help;
 
 class DiaryService extends Service
 {
-
     /**
      * 添加装修日志.
      *

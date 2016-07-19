@@ -24,11 +24,12 @@ class CommonModule extends BaseModule
             ->leftjoin('area as ar', 'ar.id', '=', 'a.parent_id')
             ->select('ar.name as first', 'a.name as second', 'area.name as three')
             ->where('area.id', $areaId)
-            ->get()->toArray();
+            ->first();
         if (!$address) {
             return false;
         }
         $addressName = '';
+        $address = $address->toArray();
         foreach ($address as $name) {
             if ($name) {
                 $addressName .= $name . '-';

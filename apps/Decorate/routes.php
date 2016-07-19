@@ -33,6 +33,6 @@ $app->group('/decorate/v1/', function () use ($container) {
     // ------------------ 同步接口 --------------------------------------
     $this->post('data/sync', 'Decorate\Services\SyncService:getBasicData');
     // ------------------ 添加商铺 --------------------------------------
-    $this->post('shop/add', 'Decorate\Services\ShopService::add');
-    $this->post('shop/list', 'Decorate\Services\ShopService::getList');
+    $this->post('shop/add', 'Decorate\Services\ShopService:add');
+    $this->post('shop/list', 'Decorate\Services\ShopService:getList');
 })->add(new AuthMiddleware($container));

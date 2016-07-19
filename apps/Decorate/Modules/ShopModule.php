@@ -1,6 +1,6 @@
 <?php namespace Decorate\Modules;
 /**
- * SyncModule class.
+ * ShopModule class.
  *
  * @author Anxiaobo <xbantcl@gmail.com>
  * @date 2016-06-13

@@ -1,5 +1,6 @@
 <?php namespace Decorate\Services;
 
+use Illuminate\Support\Facades\Request;
 use Respect\Validation\Validator as v;
 use Decorate\Utils\Help;
 use Decorate\Modules\ShopModule;
@@ -25,7 +26,7 @@ class ShopService extends Service
             return $validation->outputError($res);
         }
         $args = Help::getParams($req, $this->uid);
-        return Help::response($response, ShopModule::getInstance()->add($args));
+        return Help::response($res, ShopModule::getInstance()->add($args));
     }
 
     /**

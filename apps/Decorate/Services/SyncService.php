@@ -1,7 +1,6 @@
 <?php namespace Decorate\Services;
 
 use Illuminate\Support\Facades\Request;
-use Decorate\Modules\CollectionModule;
 use Respect\Validation\Validator as v;
 use Decorate\Utils\Help;
 use Decorate\Modules\SyncModule;
