@@ -13,6 +13,7 @@ class ResCode
     const COLLECTION_FAILED = 20008;
     const COLLECTION_EXIST = 20009;
     const DIARY_NOT_EXIST = 20010;
+    const ADD_WORKS_FILE_FAILED = 20011;
 
     public static $errorMessage = [
         self::SYSTEM_ERROR => '系统错误',
@@ -26,6 +27,7 @@ class ResCode
         self::COLLECTION_FAILED => '收藏失败',
         self::COLLECTION_EXIST => '已经收藏',
         self::DIARY_NOT_EXIST => '日记不存在',
+        self::ADD_WORKS_FILE_FAILED => '添加作品图片失败',
     ];
     
     public static function formatError($code)

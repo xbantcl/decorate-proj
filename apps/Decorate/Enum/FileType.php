@@ -6,4 +6,5 @@ class FileType
     const DIARY_COMMENT_FILE = 2;
     const DISCUSS_FILE = 3;
     const DISCUSS_COMMENT_FILE = 4;
+    const WORKS_FILE = 5;
 }

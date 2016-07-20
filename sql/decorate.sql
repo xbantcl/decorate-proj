@@ -66,7 +66,7 @@ CREATE TABLE `shop` (
     `status` tinyint(4) DEFAULT 1 COMMENT '商铺状态, 1-营业中, 2-休整中, 3-打烊中',
     `name` varchar(1024) DEFAULT '' COMMENT '商家名称',
     `intr` varchar(2048) DEFAULT '' COMMENT '商铺介绍',
-    `business` varchar(2048) DEFAULT '' COMMENT '商铺业务',
+    `business` varchar(255) NOT NULL COMMENT '商铺业务',
     `region` varchar(255) DEFAULT '' COMMENT '商铺经营区域',
     `longitude` float DEFAULT 0.0 COMMENT '用户注册经度',
     `latitude` float DEFAULT 0.0 COMMENT '用户注册纬度',
@@ -262,3 +262,32 @@ CREATE TABLE `collection` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='收藏表';
 */
+DROP TABLE IF EXISTS `shop_works`;
+CREATE TABLE `shop_works` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `shop_id` int(11) unsigned NOT NULL COMMENT '商铺id',
+    `works_id` int(11) unsigned NOT NULL COMMENT '作品数据id',
+    `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='商铺作品表';
+DROP TABLE IF EXISTS `works`;
+CREATE TABLE `works` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `uid` int(11) unsigned NOT NULL COMMENT '用户id',
+    `intr` varchar(2048) DEFAULT '' COMMENT '作品介绍',
+    `address` varchar(2048) DEFAULT '' COMMENT '作品地址',
+    `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='作品表';
+DROP TABLE IF EXISTS `works_file`;
+CREATE TABLE `works_file` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `works_id` int(11) unsigned NOT NULL COMMENT '作品数据id',
+    `file_id` int(11) unsigned NOT NULL COMMENT '作品数据id',
+    `file_url` varchar(64) NOT NULL COMMENT '作品地址',
+    `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='作品图片表';

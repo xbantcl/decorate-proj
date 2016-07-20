@@ -139,9 +139,9 @@ class DiaryService extends Service
         if ($validation->failed()) {
             return $validation->outputError($res);
         }
+        $args = Help::getParams($req);
         $args['start'] = isset($args['start']) ? $args['start'] : 0;
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
-        $args = Help::getParams($req);
         return Help::response($res, DiaryModule::getInstance()->getDiaryCommentList($args['diary_id'], $args['start'], $args['limit']));
     }
 }

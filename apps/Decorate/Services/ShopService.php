@@ -19,7 +19,7 @@ class ShopService extends Service
             'longitude' => v::floatVal()->notEmpty(),
             'latitude' => v::floatVal()->notEmpty(),
             'manager' => v::noWhitespace()->notEmpty(),
-            'business' => v::intVal()->notEmpty(),
+            'business' => v::noWhitespace()->notEmpty(),
         ]);
 
         if ($validation->failed()) {
