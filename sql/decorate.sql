@@ -261,7 +261,6 @@ CREATE TABLE `collection` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='收藏表';
-*/
 DROP TABLE IF EXISTS `shop_works`;
 CREATE TABLE `shop_works` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -291,3 +290,14 @@ CREATE TABLE `works_file` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='作品图片表';
+*/
+DROP TABLE IF EXISTS `recommend`;
+CREATE TABLE `recommend` (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `title` varchar(2048) NOT NULL COMMENT '标题',
+    `redirect` varchar(255) NOT NULL COMMENT '原文链接',
+    `cover_url` varchar(255) NOT NULL COMMENT '封面图片地址',
+    `insert_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='推荐作品';

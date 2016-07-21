@@ -35,7 +35,9 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('shop/list', 'Decorate\Services\ShopService:getList');
     $this->post('works/add', 'Decorate\Services\WorksService:add');
     $this->post('works/list', 'Decorate\Services\WorksService:getList');
-
+    // ------------------ 首页推荐 -----------------------------------
+    $this->post('recommend/list', 'Decorate\Services\HomeService:getRecommendList');
+    $this->post('recommend/read', 'Decorate\Services\HomeService:read');
 })->add(new AuthMiddleware($container));
 
 $app->group('/decorate/v1/', function () use ($container) {

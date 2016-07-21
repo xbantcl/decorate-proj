@@ -9,32 +9,32 @@ trait ItemCounter
     // 阅读数.
     public function read($dataId)
     {
-        $this->HINCRBY($this->getKey($dataId), 'rc', self::INCR_STEP);
+        return $this->HINCRBY($this->getKey($dataId), 'rc', self::INCR_STEP);
     }
 
     // 评论数.
     public function comment($dataId)
     {
-        $this->HINCRBY($this->getKey($dataId), 'cc', self::INCR_STEP);
+        return $this->HINCRBY($this->getKey($dataId), 'cc', self::INCR_STEP);
     }
 
     // 收藏数.
     public function collection($dataId, $uid)
     {
         $this->HINCRBY($this->getKey($dataId), 'sc', self::INCR_STEP);
-        $this->SADD($this->getColKey($dataId), $uid);
+        return $this->SADD($this->getColKey($dataId), $uid);
     }
 
     // 收藏数减少.
     public function uncollection($dataId, $uid)
     {
         $this->HINCRBY($this->getKey($dataId), 'sc', self::REDU_STEP);
-        $this->SREM($this->getColKey($dataId), $uid);
+        return $this->SREM($this->getColKey($dataId), $uid);
     }
 
     public function collectionUsers($dataId, $uid)
     {
-        $this->SADD($this->getColKey($dataId), $uid);
+        return $this->SADD($this->getColKey($dataId), $uid);
     }
 
     /**
