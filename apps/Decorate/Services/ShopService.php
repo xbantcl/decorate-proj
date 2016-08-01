@@ -14,7 +14,7 @@ class ShopService extends Service
     {
         $validation = $this->validation->validate($req, [
             'name' => v::noWhitespace()->notEmpty(),
-            'type' => v::intVal()->notEmpty(),
+            'avatar' => v::noWhitespace(),
             'area_id' => v::intVal()->notEmpty(),
             'longitude' => v::floatVal()->notEmpty(),
             'latitude' => v::floatVal()->notEmpty(),
