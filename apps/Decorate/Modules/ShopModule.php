@@ -23,9 +23,6 @@ class ShopModule extends BaseModule
     public function add(array $data)
     {
         $shopData = array_intersect_key($data, Shop::$rules);
-        if (!empty($shopData['avatar'])) {
-            $shopData['avatar'] = Help::config('bucket')['avatar'] . $shopData['avatar'];
-        }
         Help::translateAvatar($shopData);
         $shop = Shop::create($shopData);
         return $shop;
