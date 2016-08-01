@@ -26,8 +26,8 @@ class WorksModule extends BaseModule
             $worksData = array_intersect_key($data, Works::$rules);
             DB::beginTransaction();
             $works = Works::create($worksData);
-            if (!empty($data['fileList'])) {
-                $ret = FileModule::getInstance()->add($works->id, $data['fileList'], FileType::WORKS_FILE, 'shop');
+            if (!empty($data['fileList']) && !empty($data['bucket'])) {
+                $ret = FileModule::getInstance()->add($works->id, $data['fileList'], FileType::WORKS_FILE, $data['bucket']);
                 if (isset($ret['code'])) {
                     DB::rollback();
                     return $ret;

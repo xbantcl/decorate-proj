@@ -16,6 +16,7 @@ class WorksService extends Service
         $validation = $this->validation->validate($req, [
             'intr' => v::noWhitespace()->notEmpty(),
             'address' => v::noWhitespace()->notEmpty(),
+            'bucket' => v::noWhitespace()
         ]);
 
         if ($validation->failed()) {
