@@ -64,7 +64,7 @@ class WorksModule extends BaseModule
 
     public function getList($uid, $start, $limit)
     {
-        $query = Works::join('works_file as wf', 'wf.works_id', '=', 'works.id')
+        $query = Works::leftjoin('works_file as wf', 'wf.works_id', '=', 'works.id')
             ->select('works.id', 'works.intr', 'works.address', 'works.insert_time', 'wf.file_id', 'wf.file_url')
             ->where('works.uid', $uid)
             ->orderBy('id', 'DESC');
@@ -72,8 +72,11 @@ class WorksModule extends BaseModule
             $query = $query->where('works.id', '<', $start);
         }
         $works = $query->take(($limit + 1) * 9)->get()->toArray();
-        $worksList = array_values($this->formatWorks($works));
         $more = 0;
+        if (!$works) {
+            return ['start' => 0, 'more' => $more, 'data' => (object)[]];
+        }
+        $worksList = array_values($this->formatWorks($works));
         if (count($worksList) > $limit) {
             $more = 1;
             $worksList = array_slice($worksList, 0, $limit);
