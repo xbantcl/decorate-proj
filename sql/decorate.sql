@@ -60,8 +60,6 @@ CREATE TABLE `shop` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `uid` int(11) unsigned NOT NULL COMMENT '用户id',
     `avatar` varchar(255) DEFAULT '' COMMENT '商铺头像',
-    `goods_id` int(11) unsigned NOT NULL COMMENT '商品id',
-    `works_id` int(11) unsigned NOT NULL COMMENT '作品id',
     `area_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '地区id',
     `status` tinyint(4) DEFAULT 1 COMMENT '商铺状态, 1-营业中, 2-休整中, 3-打烊中',
     `name` varchar(1024) DEFAULT '' COMMENT '商家名称',

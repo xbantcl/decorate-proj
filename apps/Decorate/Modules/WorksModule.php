@@ -11,6 +11,8 @@ use Decorate\Enum\ResCode;
 use Illuminate\Database\Capsule\Manager as DB;
 use Decorate\Models\Works;
 use Decorate\Enum\FileType;
+use Decorate\Models\Shop;
+use Decorate\Models\ShopWorks;
 
 class WorksModule extends BaseModule
 {
@@ -24,6 +26,10 @@ class WorksModule extends BaseModule
     {
         try {
             $worksData = array_intersect_key($data, Works::$rules);
+            $shop = Shop::find($data['shop_id']);
+            if (!$shop instanceof Shop) {
+                return ResCode::formatError(ResCode::SHOP_NOT_EXIST);
+            }
             DB::beginTransaction();
             $works = Works::create($worksData);
             if (!empty($data['fileList']) && !empty($data['bucket'])) {
@@ -34,9 +40,10 @@ class WorksModule extends BaseModule
                 }
                 $works->fileList = $ret;
             }
+            ShopWorks::create(['shop_id' => $data['shop_id'], 'works_id' => $works->id]);
         } catch (\Exception $e) {
             DB::rollback();
-            return ResCode::formatError(ResCode::ADD_WORKS_FILE_FAILED);
+            return ResCode::formatError(ResCode::ADD_WORKS_FILE_FAILED, $e->getMessage());
         }
         DB::commit();
         return $works;
@@ -62,11 +69,12 @@ class WorksModule extends BaseModule
         return $dataList;
     }
 
-    public function getList($uid, $start, $limit)
+    public function getList($shopId, $start, $limit)
     {
-        $query = Works::leftjoin('works_file as wf', 'wf.works_id', '=', 'works.id')
+        $query = Works::join('shop_works as sw', 'sw.works_id', '=', 'works.id')
+            ->leftjoin('works_file as wf', 'wf.works_id', '=', 'works.id')
             ->select('works.id', 'works.intr', 'works.address', 'works.insert_time', 'wf.file_id', 'wf.file_url')
-            ->where('works.uid', $uid)
+            ->where('sw.shop_id', $shopId)
             ->orderBy('id', 'DESC');
         if ($start > 0) {
             $query = $query->where('works.id', '<', $start);

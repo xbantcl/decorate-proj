@@ -14,6 +14,7 @@ class ResCode
     const COLLECTION_EXIST = 20009;
     const DIARY_NOT_EXIST = 20010;
     const ADD_WORKS_FILE_FAILED = 20011;
+    const SHOP_NOT_EXIST = 20012;
 
     public static $errorMessage = [
         self::SYSTEM_ERROR => '系统错误',
@@ -28,14 +29,18 @@ class ResCode
         self::COLLECTION_EXIST => '已经收藏',
         self::DIARY_NOT_EXIST => '日记不存在',
         self::ADD_WORKS_FILE_FAILED => '添加作品图片失败',
+        self::SHOP_NOT_EXIST => '商铺不存在',
     ];
     
-    public static function formatError($code)
+    public static function formatError($code, $msg = '')
     {
         if (!isset(static::$errorMessage[$code])) {
             $code = self::SYSTEM_ERROR;
         }
         $message = static::$errorMessage[$code];
+        if ($msg) {
+            $message = $msg;
+        }
         return \Decorate\Utils\Help::formatResponse($code, $message);
     }
 }

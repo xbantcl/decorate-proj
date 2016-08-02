@@ -16,7 +16,8 @@ class WorksService extends Service
         $validation = $this->validation->validate($req, [
             'intr' => v::noWhitespace()->notEmpty(),
             'address' => v::noWhitespace()->notEmpty(),
-            'bucket' => v::noWhitespace()
+            'bucket' => v::noWhitespace(),
+            'shop_id' => v::intVal()->notEmpty(),
         ]);
 
         if ($validation->failed()) {
@@ -39,6 +40,7 @@ class WorksService extends Service
     public function getList($req, $res)
     {
         $validation = $this->validation->validate($req, [
+            'shop_id' => v::intVal()->notEmpty(),
             'start' => v::optional(v::numeric()),
             'limit' => v::optional(v::numeric())
         ]);
@@ -49,6 +51,6 @@ class WorksService extends Service
         $args = Help::getParams($req, $this->uid);
         $args['start'] = isset($args['start']) ? $args['start'] : 0;
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
-        return Help::response($res, WorksModule::getInstance()->getList($args['uid'], $args['start'], $args['limit']));
+        return Help::response($res, WorksModule::getInstance()->getList($args['shop_id'], $args['start'], $args['limit']));
     }
 }
