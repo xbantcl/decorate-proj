@@ -96,7 +96,7 @@ class Help
     public static function translateAvatar(array &$data)
     {
         if (!empty($data['avatar'])) {
-            $avatarDomin = Help::config('bucket')['avatar'];
+            $avatarDomin = Help::config('qiniu')['bucket']['pub']['avatar'];
             $data['avatar'] = $avatarDomin . $data['avatar'];
         }
     }
