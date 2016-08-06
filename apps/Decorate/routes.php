@@ -13,9 +13,9 @@ $app->group('/decorate/v1/', function () use ($container) {
     // ------------------ 装修日记接口 ----------------------------------
     $this->post('diary/add', 'Decorate\Services\DiaryService:add')->add(new ParamConvertMiddleware($container));
     $this->post('diary/get', 'Decorate\Services\DiaryService:getDiaryDetailById');
-    $this->post('diary/user/list', 'Decorate\Services\DiaryService:getUserDiaryList');
+    //$this->post('diary/user/list', 'Decorate\Services\DiaryService:getUserDiaryList');
     $this->post('diary/comment/add', 'Decorate\Services\DiaryService:commentDiary');
-    $this->post('diary/comment/list', 'Decorate\Services\DiaryService:getDiaryCommentList');
+    //$this->post('diary/comment/list', 'Decorate\Services\DiaryService:getDiaryCommentList');
     // ------------------ 文件token接口 ---------------------------------
     $this->post('token/get', 'Decorate\Services\TokenService:getUploadFileToken');
     $this->post('label/tree', 'Decorate\Services\DiaryService:getLabelTree');
@@ -44,6 +44,9 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('data/sync', 'Decorate\Services\SyncService:getBasicData');
     // ------------------ 装修日记 ---------------------------------------
     $this->post('diary/list', 'Decorate\Services\DiaryService:getDiaryList');
+    $this->post('diary/user/list', 'Decorate\Services\DiaryService:getUserDiaryList');
+    $this->post('diary/comment/list', 'Decorate\Services\DiaryService:getDiaryCommentList');
     $this->post('discuss/list', 'Decorate\Services\DiscussService:getDiscussList');
+    $this->post('discuss/comment/list', 'Decorate\Services\DiscussService:getDiscussCommentList');
 });
 
