@@ -83,9 +83,9 @@ class DiaryService extends Service
         if ($validation->failed()) {
             return $validation->outputError($response);
         }
-        $args = Help::getParams($request, $this->uid);
+        $args = Help::getParams($request);
         $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
-        return Help::response($response, DiaryModule::getInstance()->getDiaryList($args['uid'], intval($args['start']), $args['limit']));
+        return Help::response($response, DiaryModule::getInstance()->getDiaryList(intval($args['start']), $args['limit']));
     }
 
     public function getLabelTree($request, $response)

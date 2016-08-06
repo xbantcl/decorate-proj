@@ -138,7 +138,7 @@ class DiaryModule extends BaseModule
         }
     }
 
-    public function getDiaryList($uid, $start = 0, $limit = 15)
+    public function getDiaryList($start = 0, $limit = 15)
     {
         $query = Diary::leftjoin('diary_file as df', 'df.diary_id', '=', 'diary.id')
             ->select('diary.id', 'diary.title', 'diary.uid', 'diary.decorate_progress', 'diary.label_id', 'diary.content', 'diary.insert_time', 'df.file_id', 'df.file_url')
