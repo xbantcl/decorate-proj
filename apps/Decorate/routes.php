@@ -22,7 +22,7 @@ $app->group('/decorate/v1/', function () use ($container) {
     // ------------------ 建材讨论接口 ----------------------------------
     $this->post('discuss/add', 'Decorate\Services\DiscussService:add')->add(new ParamConvertMiddleware($container));
     $this->post('discuss/get', 'Decorate\Services\DiscussService:getDiscussDetailById');
-    $this->post('discuss/list', 'Decorate\Services\DiscussService:getDiscussList');
+    // $this->post('discuss/list', 'Decorate\Services\DiscussService:getDiscussList');
     $this->post('discuss/comment/add', 'Decorate\Services\DiscussService:commentDiscuss');
     $this->post('discuss/comment/list', 'Decorate\Services\DiscussService:getDiscussCommentList');
     // ------------------ 收藏接口 --------------------------------------
@@ -44,5 +44,6 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('data/sync', 'Decorate\Services\SyncService:getBasicData');
     // ------------------ 装修日记 ---------------------------------------
     $this->post('diary/list', 'Decorate\Services\DiaryService:getDiaryList');
+    $this->post('discuss/list', 'Decorate\Services\DiscussService:getDiscussList');
 });
 
