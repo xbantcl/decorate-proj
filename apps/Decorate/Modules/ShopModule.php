@@ -33,10 +33,11 @@ class ShopModule extends BaseModule
         $shops = Shop::where('uid', $uid)
             ->orderBy('id', 'DESC')
             ->get()->toArray();
+        /*
         foreach ($shops as &$shop) {
             $shop['address'] = CommonModule::getInstance()->getAddressByArearId($shop['area_id']);
             unset($shop['area_id']);
-        }
+        }*/
         return $shops;
     }
 }

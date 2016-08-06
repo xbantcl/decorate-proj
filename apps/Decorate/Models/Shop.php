@@ -36,6 +36,8 @@ class Shop extends BaseModel
         'status' => 'int',
         'longitude' => 'float',
         'latitude' => 'float',
+        'address' => 'string',
+        'region' => 'string',
         'insert_time' => 'int',
         'modify_time' => 'int'
     ];

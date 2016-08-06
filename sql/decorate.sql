@@ -68,6 +68,7 @@ CREATE TABLE `shop` (
     `region` varchar(255) DEFAULT '' COMMENT '商铺经营区域',
     `longitude` float DEFAULT 0.0 COMMENT '用户注册经度',
     `latitude` float DEFAULT 0.0 COMMENT '用户注册纬度',
+    `address` varchar(2048) DEFAULT '' COMMENT '商铺地址',
     `insert_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '注册时间',
     `modify_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '修改时间',
     PRIMARY KEY (`id`)
@@ -288,7 +289,6 @@ CREATE TABLE `works_file` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='作品图片表';
-*/
 DROP TABLE IF EXISTS `recommend`;
 CREATE TABLE `recommend` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -299,3 +299,4 @@ CREATE TABLE `recommend` (
     `modify_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='推荐作品';
+*/
