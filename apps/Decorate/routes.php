@@ -24,7 +24,7 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('discuss/get', 'Decorate\Services\DiscussService:getDiscussDetailById');
     // $this->post('discuss/list', 'Decorate\Services\DiscussService:getDiscussList');
     $this->post('discuss/comment/add', 'Decorate\Services\DiscussService:commentDiscuss');
-    $this->post('discuss/comment/list', 'Decorate\Services\DiscussService:getDiscussCommentList');
+    //$this->post('discuss/comment/list', 'Decorate\Services\DiscussService:getDiscussCommentList');
     // ------------------ 收藏接口 --------------------------------------
     $this->post('collection/add', 'Decorate\Services\CollectionService:add');
     $this->post('collection/list', 'Decorate\Services\CollectionService:getList');
