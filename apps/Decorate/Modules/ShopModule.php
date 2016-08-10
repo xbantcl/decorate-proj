@@ -28,7 +28,7 @@ class ShopModule extends BaseModule
         return $shop;
     }
 
-    public function getList($uid)
+    public function getListByUserId($uid)
     {
         $shops = Shop::where('uid', $uid)
             ->orderBy('id', 'DESC')
@@ -39,5 +39,27 @@ class ShopModule extends BaseModule
             unset($shop['area_id']);
         }*/
         return $shops;
+    }
+
+    public function getList($start = 0, $limit = 15)
+    {
+        $query = Shop::orderBy('id', 'DESC');
+        if ($start > 0) {
+            $query = $query->where('id', '<', $start);
+        }
+        $shops = $query->take($limit + 1)->get()->toArray();
+        $more = 0;
+        if (!$shops) {
+            return ['start' => $start, 'more' => $more, 'list' => (object)[]];
+        }
+        if (count($shops) > $limit) {
+            $more = 1;
+            array_pop($shops);
+        }
+        foreach ($shops as &$shop) {
+            $shop['works'] = WorksModule::getInstance()->getList($shop['id'])['data'];
+        }
+        unset($shop);
+        return ['start' => $start, 'more' => $more, 'list' => $shops];
     }
 }

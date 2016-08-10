@@ -69,7 +69,7 @@ class WorksModule extends BaseModule
         return $dataList;
     }
 
-    public function getList($shopId, $start, $limit)
+    public function getList($shopId, $start = 0, $limit = 15)
     {
         $query = Works::join('shop_works as sw', 'sw.works_id', '=', 'works.id')
             ->leftjoin('works_file as wf', 'wf.works_id', '=', 'works.id')

@@ -31,7 +31,7 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('collection/delete', 'Decorate\Services\CollectionService:delete');
     // ------------------ 商铺 --------------------------------------
     $this->post('shop/add', 'Decorate\Services\ShopService:add');
-    $this->post('shop/list', 'Decorate\Services\ShopService:getList');
+    $this->post('user/shop/list', 'Decorate\Services\ShopService:getListByUserId');
     $this->post('works/add', 'Decorate\Services\WorksService:add');
     $this->post('works/list', 'Decorate\Services\WorksService:getList');
     // ------------------ 首页推荐 -----------------------------------
@@ -48,5 +48,6 @@ $app->group('/decorate/v1/', function () use ($container) {
     $this->post('diary/comment/list', 'Decorate\Services\DiaryService:getDiaryCommentList');
     $this->post('discuss/list', 'Decorate\Services\DiscussService:getDiscussList');
     $this->post('discuss/comment/list', 'Decorate\Services\DiscussService:getDiscussCommentList');
+    $this->post('shop/list', 'Decorate\Services\ShopService:getList');
 });
 

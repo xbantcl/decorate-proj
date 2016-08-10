@@ -32,13 +32,35 @@ class ShopService extends Service
     }
 
     /**
-     * 获取商铺列表.
+     * 获取用户商铺列表.
      * 
+     * @param object $req
+     * @param object $res
+     */
+    public function getListByUserId($req, $res)
+    {
+        return Help::response($res, ShopModule::getInstance()->getListByUserId($this->uid));
+    }
+
+    /**
+     * 获取商铺列表.
+     *
      * @param object $req
      * @param object $res
      */
     public function getList($req, $res)
     {
-        return Help::response($res, ShopModule::getInstance()->getList($this->uid));
+        $validation = $this->validation->validate($req, [
+            'start' => v::optional(v::numeric()),
+            'limit' => v::optional(v::numeric())
+        ]);
+        
+        if ($validation->failed()) {
+            return $validation->outputError($res);
+        }
+        $args = Help::getParams($req);
+        $args['start'] = isset($args['start']) ? $args['start'] : 0;
+        $args['limit'] = isset($args['limit']) ? $args['limit'] : 15;
+        return Help::response($res, ShopModule::getInstance()->getList($args['start'], $args['limit']));
     }
 }
